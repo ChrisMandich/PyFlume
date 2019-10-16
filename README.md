@@ -25,7 +25,7 @@ client_secret:
 ```
 ## Retrieve a list of devices: 
 ```
-flume_devices = FlumeAuth(username, password, client_id, client_secret)`
+flume_devices = FlumeDeviceList(username, password, client_id, client_secret)`
 ```
 
 ## Return Data for all Flume Devices of Type 2
