@@ -19,7 +19,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-          'base64','datetime','json','logging','pytz','requests',
+          'pytz',
       ],
     python_requires='>=3.6',
 )
