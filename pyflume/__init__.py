@@ -8,36 +8,6 @@ import requests
 
 _LOGGER = logging.getLogger(__name__)
 
-class FlumeSensor(Entity):
-    """Representation of the Flume sensor."""
-
-    def __init__(self, flume, name):
-        """Initialize the Flume sensor."""
-        self.flume = flume
-        self._name = name
-        self._state = None
-
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
-    def state(self):
-        """Return the state of the sensor."""
-        return self._state
-
-    @property
-    def unit_of_measurement(self):
-        """Return the unit the value is expressed in."""
-        return "gal"
-
-    def update(self):
-        """Get the latest data and updates the states."""
-        self.flume.update()
-        self._state = self.flume.value
-
-
 class FlumeAuth:
     """Get the Authentication Bearer, User ID and list of devices from Flume API."""
 
