@@ -20,8 +20,7 @@ class FlumeAuth:
         self._token = self.get_token()
         self._user_id = self.get_userid()
         self._bearer = self.get_bearer()
-        self.device_list = self.get_devices()
-
+        
     def get_token(self):
         """Return authorization token for session."""
         url = "https://api.flumetech.com/oauth/token"
@@ -63,6 +62,20 @@ class FlumeAuth:
         """Return Bearer for Authorized session."""
         return self._token[0]["access_token"]
 
+class FlumeDeviceList:
+    def __init__(self, username, password, client_id, client_secret):
+        """Initialize the data object."""
+        self._username = username
+        self._password = password
+        self._client_id = client_id
+        self._client_secret = client_secret
+
+        flume_auth = FlumeAuth(username, password, client_id, client_secret)
+
+        self._user_id = flume_auth._user_id
+        self._bearer = flume_auth._bearer
+        self.device_list = self.get_devices()
+    
     def get_devices(self):
         """Return all available devices from Flume API."""
         url = "https://api.flumetech.com/users/" + str(self._user_id) + "/devices"
@@ -80,6 +93,8 @@ class FlumeAuth:
             )
 
         return json.loads(response.text)["data"]
+
+    
 
 
 class FlumeData:
