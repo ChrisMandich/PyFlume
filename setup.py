@@ -5,12 +5,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="PyFlume",
-    version="0.1.4",
+    version="0.1.5",
     author="ChrisMandich",
     author_email="Chris@Mandich.net",
     description="Package to integrate with Flume Sensor",
-    long_description=long_description,
     long_description_content_type="text/markdown",
+    long_description=long_description,
     url="https://github.com/ChrisMandich/PyFlume",
     packages=setuptools.find_packages(),
     classifiers=[
