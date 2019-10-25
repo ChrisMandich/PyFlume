@@ -151,9 +151,7 @@ class FlumeData:
         """Update dictionary"""
         query_array.append(query_1)
         query_dict = {
-            "queries": [
-                query_array
-            ]
+            "queries": query_array
         }
 
         headers = {"authorization": "Bearer " + self._bearer + ""}
