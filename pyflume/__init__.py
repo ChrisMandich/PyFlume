@@ -6,7 +6,7 @@ import logging
 import pytz
 import requests
 
-_LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 class FlumeAuth:
     """Get the Authentication Bearer, User ID and list of devices from Flume API."""
@@ -39,8 +39,8 @@ class FlumeAuth:
 
         response = requests.request("POST", url, data=payload, headers=headers)
 
-        _LOGGER.debug("Token Payload: %s", payload)
-        _LOGGER.debug("Token Response: %s", response.text)
+        LOGGER.debug("Token Payload: %s", payload)
+        LOGGER.debug("Token Response: %s", response.text)
 
         if response.status_code != 200:
             raise Exception(
@@ -83,7 +83,7 @@ class FlumeDeviceList:
         headers = {"authorization": "Bearer " + self._bearer + ""}
         response = requests.request("GET", url, headers=headers, params=querystring)
 
-        _LOGGER.debug("get_devices Response: %s", response.text)
+        LOGGER.debug("get_devices Response: %s", response.text)
 
         if response.status_code != 200:
             raise Exception(
@@ -93,8 +93,6 @@ class FlumeDeviceList:
             )
 
         return json.loads(response.text)["data"]
-
-    
 
 
 class FlumeData:
@@ -125,6 +123,10 @@ class FlumeData:
 
     def update(self):
         """Return updated value for session."""
+        query_array = []
+        utc_now = pytz.utc.localize(datetime.utcnow())
+        time_zone_now = utc_now.astimezone(pytz.timezone(self._time_zone))
+
         url = (
             "https://api.flumetech.com/users/"
             + str(self._user_id)
@@ -132,35 +134,36 @@ class FlumeData:
             + str(self._device_id)
             + "/query"
         )
-
-        utc_now = pytz.utc.localize(datetime.utcnow())
-        time_zone_now = utc_now.astimezone(pytz.timezone(self._time_zone))
-
+        
+        """Query 1: Specified start / end time"""
         since_datetime = (time_zone_now - self._scan_interval).strftime(
-            "%Y-%m-%d %H:%M:00"
-        )
+                "%Y-%m-%d %H:%M:00"
+            )
         until_datetime = time_zone_now.strftime("%Y-%m-%d %H:%M:00")
-
+        query_1 = {
+            "since_datetime": since_datetime,
+            "until_datetime": until_datetime,
+            "bucket": "MIN",
+            "request_id": "update",
+            "units": "GALLONS",
+            }
+        
+        """Update dictionary"""
+        query_array.append(query_1)
         query_dict = {
             "queries": [
-                {
-                    "since_datetime": since_datetime,
-                    "until_datetime": until_datetime,
-                    "bucket": "MIN",
-                    "request_id": "update",
-                    "units": "GALLONS",
-                }
+                query_array
             ]
         }
 
         headers = {"authorization": "Bearer " + self._bearer + ""}
         response = requests.post(url, json=query_dict, headers=headers)
 
-        _LOGGER.debug("Update URL: %s", url)
-        _LOGGER.debug("Update headers: %s", headers)
-        _LOGGER.debug("Update query_dict: %s", query_dict)
-        _LOGGER.debug("Update Response: %s", response.text)
-
+        LOGGER.debug("Update URL: %s", url)
+        LOGGER.debug("Update headers: %s", headers)
+        LOGGER.debug("Update query_dict: %s", query_dict)
+        LOGGER.debug("Update Response: %s", response.text)
+        
         if response.status_code != 200:
             raise Exception(
                 "Can't update flume data for user id {}. Response code returned : {}".format(
