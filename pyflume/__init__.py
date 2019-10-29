@@ -207,6 +207,7 @@ class FlumeData:
         query_array = []
         utc_now = pytz.utc.localize(datetime.utcnow())
         time_zone_now = utc_now.astimezone(pytz.timezone(self._time_zone))
+        self._flume_auth.read_token_file()
 
         url = f"https://api.flumetech.com/users/{self._flume_auth.user_id}\
         /devices/{self.device_id}/query"
