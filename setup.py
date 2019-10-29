@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="PyFlume",
-    version="0.1.6",
+    version="0.2.0",
     author="ChrisMandich",
     author_email="Chris@Mandich.net",
     description="Package to integrate with Flume Sensor",
@@ -20,6 +20,8 @@ setuptools.setup(
     ],
     install_requires=[
           'pytz',
+          'pyjwt',
+          'ratelimit',
       ],
     python_requires='>=3.6',
 )
