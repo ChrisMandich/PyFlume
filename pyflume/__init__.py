@@ -1,96 +1,175 @@
-"""Package to interact with Flume Sensor"""
-import base64
-from datetime import datetime, timedelta
+"""Package to interact with Flume Sensor."""
 import json
 import logging
+from datetime import datetime, timedelta
+
+import jwt  # pyjwt
 import pytz
 import requests
+from ratelimit import limits, sleep_and_retry
+
+URL_OAUTH_TOKEN = "https://api.flumetech.com/oauth/token"
+TOKEN_FILE = "flume_token"
+API_LIMIT = 60
 
 LOGGER = logging.getLogger(__name__)
 
+
+def _response_error(message, response):
+    if response.status_code == 400:
+        error_message = json.loads(response.text)["detailed"][0]
+        raise Exception(
+            f"{message}. Response code returned : {response.status_code}.\
+             Error message returned: {error_message}"
+        )
+    if response.status_code != 200:
+        error_message = json.loads(response.text)["message"]
+        raise Exception(
+            f"{message}. Response code returned : {response.status_code}. \
+            Error message returned: {error_message}"
+        )
+
+
 class FlumeAuth:
-    """Get the Authentication Bearer, User ID and list of devices from Flume API."""
+    """Interact with API Authentication."""
 
     def __init__(self, username, password, client_id, client_secret):
         """Initialize the data object."""
-        self._username = username
-        self._password = password
-        self._client_id = client_id
-        self._client_secret = client_secret
-        self._token = self.get_token()
-        self._user_id = self.get_userid()
-        self._bearer = self.get_bearer()
-        
-    def get_token(self):
-        """Return authorization token for session."""
-        url = "https://api.flumetech.com/oauth/token"
-        payload = (
-            '{"grant_type":"password","client_id":"'
-            + self._client_id
-            + '","client_secret":"'
-            + self._client_secret
-            + '","username":"'
-            + self._username
-            + '","password":"'
-            + self._password
-            + '"}'
-        )
-        headers = {"content-type": "application/json"}
+        self._creds = {
+                        "client_id": client_id,
+                        "client_secret": client_secret,
+                        "username": username,
+                        "password": password
+                        }
 
-        response = requests.request("POST", url, data=payload, headers=headers)
+        self._token = None
+        self._decoded_token = None
+        self.user_id = None
+        self.authorization_header = None
+
+        self.read_token_file()
+
+    def token_request(self, payload):
+        """Request Authorization Payload."""
+        headers = {"content-type": "application/json"}
+        response = requests.request(
+            "POST",
+            URL_OAUTH_TOKEN,
+            json=payload,
+            headers=headers
+            )
 
         LOGGER.debug("Token Payload: %s", payload)
         LOGGER.debug("Token Response: %s", response.text)
 
-        if response.status_code != 200:
-            raise Exception(
-                "Can't get token for user {}. Response code returned : {}".format(
-                    self._username, response.status_code
-                )
+        # Check for response errors.
+        _response_error(
+            f"Can't get token for user {self._creds['username']}",
+            response
             )
 
-        return json.loads(response.text)["data"]
+        return json.loads(response.text)["data"][0]
 
-    def get_userid(self):
-        """Return User ID for authorized user."""
-        json_token_data = self._token[0]
-        return json.loads(
-            base64.b64decode(json_token_data["access_token"].split(".")[1])
-        )["user_id"]
+    def fetch_token(self):
+        """Return authorization token for session."""
+        payload = dict({"grant_type": "password"}, **self._creds)
+        self.load_token(self.token_request(payload))
+        self.write_token_file()
 
-    def get_bearer(self):
-        """Return Bearer for Authorized session."""
-        return self._token[0]["access_token"]
+    def refresh_token(self):
+        """Return authorization token for session."""
+        payload = {
+                        "grant_type": "refresh_token",
+                        "refresh_token": self._token['refresh_token'],
+                        "client_id": self._creds['client_id'],
+                        "client_secret": self._creds['client_secret']
+                }
+        self.load_token(self.token_request(payload))
+        self.write_token_file()
+
+    def verify_token(self):
+        """Check to see if token is expiring in 12 hours."""
+        token_expiration = datetime.fromtimestamp(self._decoded_token['exp'])
+        time_difference = datetime.now() + timedelta(hours=12)
+
+        LOGGER.debug("Token expiration time: %s", token_expiration)
+        LOGGER.debug("Token comparison time: %s", time_difference)
+
+        if token_expiration <= time_difference:
+            self.refresh_token()
+
+    def load_token(self, token):
+        """Update _token, decode token, user_id and auth header."""
+        self._token = token
+        try:
+            self._decoded_token = jwt.decode(
+                self._token['access_token'],
+                verify=False
+                )
+        except jwt.exceptions.DecodeError:
+            LOGGER.debug("Poorly formatted Access Token, \
+            fetching token using _creds")
+
+            self.fetch_token()
+
+        self.user_id = self._decoded_token['user_id']
+        self.authorization_header = {
+            "authorization": "Bearer " + self._token['access_token']
+            }
+
+    def write_token_file(self):
+        """Write token locally."""
+        with open(TOKEN_FILE, 'w') as token_file:
+            token_file.write(json.dumps(self._token))
+
+    def read_token_file(self):
+        """Read local token file and load it."""
+        try:
+            with open(TOKEN_FILE, 'r') as token_file:
+                self.load_token(json.load(token_file))
+            self.verify_token()
+        except FileNotFoundError:
+            LOGGER.debug("Token file does not exist, \
+            fetching token using _creds")
+            self.fetch_token()
+            self.write_token_file()
+        except json.decoder.JSONDecodeError:
+            LOGGER.debug("Invalid JSON in token file, \
+            fetching token using _creds")
+            self.fetch_token()
+            self.write_token_file()
+
 
 class FlumeDeviceList:
+    """Get Flume Device List from API."""
+
     def __init__(self, username, password, client_id, client_secret):
         """Initialize the data object."""
-        self._username = username
-        self._password = password
-        self._client_id = client_id
-        self._client_secret = client_secret
-
-        flume_auth = FlumeAuth(username, password, client_id, client_secret)
-
-        self._user_id = flume_auth._user_id
-        self._bearer = flume_auth._bearer
+        self._flume_auth = FlumeAuth(
+            username,
+            password,
+            client_id,
+            client_secret
+            )
         self.device_list = self.get_devices()
-    
+
     def get_devices(self):
         """Return all available devices from Flume API."""
-        url = "https://api.flumetech.com/users/" + str(self._user_id) + "/devices"
+        url = f"https://api.flumetech.com/users/\
+        {self._flume_auth.user_id}/devices"
+
         querystring = {"user": "false", "location": "false"}
-        headers = {"authorization": "Bearer " + self._bearer + ""}
-        response = requests.request("GET", url, headers=headers, params=querystring)
+        response = requests.request(
+            "GET",
+            url,
+            headers=self._flume_auth.authorization_header,
+            params=querystring
+            )
 
         LOGGER.debug("get_devices Response: %s", response.text)
 
-        if response.status_code != 200:
-            raise Exception(
-                "Impossible to retreive devices. Response code returned : {}".format(
-                    response.status_code
-                )
-            )
+        # Check for response errors.
+        _response_error("Impossible to retreive devices", response)
 
         return json.loads(response.text)["data"]
 
@@ -99,45 +178,41 @@ class FlumeData:
     """Get the latest data and update the states."""
 
     def __init__(
-        self,
-        username,
-        password,
-        client_id,
-        client_secret,
-        device_id,
-        time_zone,
-        scan_interval,
-    ):
+            self,
+            username,
+            password,
+            client_id,
+            client_secret,
+            device_id,
+            time_zone,
+            scan_interval,):
         """Initialize the data object."""
-        self._username = username
-        self._device_id = device_id
+        self._flume_auth = FlumeAuth(
+            username,
+            password,
+            client_id,
+            client_secret
+            )
         self._scan_interval = scan_interval
         self._time_zone = time_zone
+        self.device_id = device_id
         self.value = None
 
-        flume_auth = FlumeAuth(username, password, client_id, client_secret)
-
-        self._user_id = flume_auth._user_id
-        self._bearer = flume_auth._bearer
         self.update()
 
+    @sleep_and_retry
+    @limits(calls=2, period=API_LIMIT)
     def update(self):
         """Return updated value for session."""
         query_array = []
         utc_now = pytz.utc.localize(datetime.utcnow())
         time_zone_now = utc_now.astimezone(pytz.timezone(self._time_zone))
 
-        url = (
-            "https://api.flumetech.com/users/"
-            + str(self._user_id)
-            + "/devices/"
-            + str(self._device_id)
-            + "/query"
-        )
-        
-        """Query 1: Specified start / end time"""
+        url = f"https://api.flumetech.com/users/{self._flume_auth.user_id}\
+        /devices/{self.device_id}/query"
+
         since_datetime = (time_zone_now - self._scan_interval).strftime(
-                "%Y-%m-%d %H:%M:00"
+            "%Y-%m-%d %H:%M:00"
             )
         until_datetime = time_zone_now.strftime("%Y-%m-%d %H:%M:00")
         query_1 = {
@@ -147,26 +222,23 @@ class FlumeData:
             "request_id": "update",
             "units": "GALLONS",
             }
-        
-        """Update dictionary"""
+
         query_array.append(query_1)
         query_dict = {
             "queries": query_array
         }
 
-        headers = {"authorization": "Bearer " + self._bearer + ""}
-        response = requests.post(url, json=query_dict, headers=headers)
-
-        LOGGER.debug("Update URL: %s", url)
-        LOGGER.debug("Update headers: %s", headers)
-        LOGGER.debug("Update query_dict: %s", query_dict)
-        LOGGER.debug("Update Response: %s", response.text)
-        
-        if response.status_code != 200:
-            raise Exception(
-                "Can't update flume data for user id {}. Response code returned : {}".format(
-                    self._username, response.status_code
-                )
+        response = requests.post(
+            url,
+            json=query_dict,
+            headers=self._flume_auth.authorization_header
             )
 
+        LOGGER.debug("Update URL: %s", url)
+        LOGGER.debug("Update query_dict: %s", query_dict)
+        LOGGER.debug("Update Response: %s", response.text)
+
+        # Check for response errors.
+        _response_error(f"Can't update flume data for user id \
+        {self._flume_auth.user_id}", response)
         self.value = json.loads(response.text)["data"][0]["update"][0]["value"]
