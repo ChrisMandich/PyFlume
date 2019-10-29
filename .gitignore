@@ -1,5 +1,6 @@
+flume_token
+test-oauth.py
+test-pyflume.py
 build/*
 dist/*
-pyflume/__pycache__/*
-PyFlume.egg-info/*
-test-pyflume.py
+pyflume/__pycache__
