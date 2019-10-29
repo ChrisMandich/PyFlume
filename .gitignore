@@ -4,3 +4,4 @@ test-pyflume.py
 build/*
 dist/*
 pyflume/__pycache__
+PyFlume.egg-info
