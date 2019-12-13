@@ -9,7 +9,7 @@ import requests
 from ratelimit import limits, sleep_and_retry
 
 URL_OAUTH_TOKEN = "https://api.flumetech.com/oauth/token"
-TOKEN_FILE = "flume_token"
+TOKEN_FILE = "/tmp/FLUME_TOKEN_FILE"
 API_LIMIT = 60
 
 LOGGER = logging.getLogger(__name__)
