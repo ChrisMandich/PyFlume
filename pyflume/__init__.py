@@ -19,9 +19,11 @@ LOGGER = logging.getLogger(__name__)
 
 
 def _response_error(message, response):
+    if response.status_code == 200:
+        return
     if response.status_code == 400:
         error_message = json.loads(response.text)["detailed"][0]
-    if response.status_code != 200:
+    else:
         error_message = json.loads(response.text)["message"]
     raise Exception(
         f'''Message:{message}.
