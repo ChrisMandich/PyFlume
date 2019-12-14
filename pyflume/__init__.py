@@ -6,10 +6,12 @@ from datetime import datetime, timedelta
 import jwt  # pyjwt
 import pytz
 import requests
+from os import path
 from ratelimit import limits, sleep_and_retry
+from tempfile import gettempdir
 
 URL_OAUTH_TOKEN = "https://api.flumetech.com/oauth/token"
-TOKEN_FILE = "/tmp/FLUME_TOKEN_FILE"
+TOKEN_FILE =  path.join(gettempdir(),"FLUME_TOKEN_FILE")
 API_LIMIT = 60
 
 LOGGER = logging.getLogger(__name__)
@@ -33,7 +35,7 @@ def _response_error(message, response):
 class FlumeAuth:
     """Interact with API Authentication."""
 
-    def __init__(self, username, password, client_id, client_secret):
+    def __init__(self, username, password, client_id, client_secret, flume_token_file=TOKEN_FILE):
         """Initialize the data object."""
         self._creds = {
                         "client_id": client_id,
@@ -41,7 +43,7 @@ class FlumeAuth:
                         "username": username,
                         "password": password
                         }
-
+        self._token_file = flume_token_file 
         self._token = None
         self._decoded_token = None
         self.user_id = None
@@ -119,13 +121,13 @@ class FlumeAuth:
 
     def write_token_file(self):
         """Write token locally."""
-        with open(TOKEN_FILE, 'w') as token_file:
+        with open(self._token_file, 'w') as token_file:
             token_file.write(json.dumps(self._token))
 
     def read_token_file(self):
         """Read local token file and load it."""
         try:
-            with open(TOKEN_FILE, 'r') as token_file:
+            with open(self._token_file, 'r') as token_file:
                 self.load_token(json.load(token_file))
             self.verify_token()
         except FileNotFoundError:
@@ -143,13 +145,14 @@ class FlumeAuth:
 class FlumeDeviceList:
     """Get Flume Device List from API."""
 
-    def __init__(self, username, password, client_id, client_secret):
+    def __init__(self, username, password, client_id, client_secret, flume_token_file=TOKEN_FILE):
         """Initialize the data object."""
         self._flume_auth = FlumeAuth(
             username,
             password,
             client_id,
-            client_secret
+            client_secret,
+            flume_token_file
             )
         self.device_list = self.get_devices()
 
@@ -185,13 +188,15 @@ class FlumeData:
             client_secret,
             device_id,
             time_zone,
-            scan_interval,):
+            scan_interval,
+             flume_token_file=TOKEN_FILE,):
         """Initialize the data object."""
         self._flume_auth = FlumeAuth(
             username,
             password,
             client_id,
-            client_secret
+            client_secret,
+            flume_token_file
             )
         self._scan_interval = scan_interval
         self._time_zone = time_zone
