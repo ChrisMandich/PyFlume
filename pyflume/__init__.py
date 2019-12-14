@@ -11,7 +11,7 @@ from ratelimit import limits, sleep_and_retry
 from tempfile import gettempdir
 
 URL_OAUTH_TOKEN = "https://api.flumetech.com/oauth/token"
-TOKEN_FILE =  path.join(gettempdir(),"FLUME_TOKEN_FILE")
+TOKEN_FILE = path.join(gettempdir(), "FLUME_TOKEN_FILE")
 API_LIMIT = 60
 
 LOGGER = logging.getLogger(__name__)
@@ -20,22 +20,26 @@ LOGGER = logging.getLogger(__name__)
 def _response_error(message, response):
     if response.status_code == 400:
         error_message = json.loads(response.text)["detailed"][0]
-        raise Exception(
-            f"{message}. Response code returned : {response.status_code}.\
-             Error message returned: {error_message}"
-        )
     if response.status_code != 200:
         error_message = json.loads(response.text)["message"]
-        raise Exception(
-            f"{message}. Response code returned : {response.status_code}. \
-            Error message returned: {error_message}"
-        )
+
+    raise Exception(
+        f"{message}. Response code returned : {response.status_code}. \
+        Error message returned: {error_message}."
+    )
 
 
 class FlumeAuth:
     """Interact with API Authentication."""
 
-    def __init__(self, username, password, client_id, client_secret, flume_token_file=TOKEN_FILE):
+    def __init__(
+            self,
+            username,
+            password,
+            client_id,
+            client_secret,
+            flume_token_file=TOKEN_FILE,
+            ):
         """Initialize the data object."""
         self._creds = {
                         "client_id": client_id,
@@ -43,7 +47,7 @@ class FlumeAuth:
                         "username": username,
                         "password": password
                         }
-        self._token_file = flume_token_file 
+        self._token_file = flume_token_file
         self._token = None
         self._decoded_token = None
         self.user_id = None
@@ -145,7 +149,14 @@ class FlumeAuth:
 class FlumeDeviceList:
     """Get Flume Device List from API."""
 
-    def __init__(self, username, password, client_id, client_secret, flume_token_file=TOKEN_FILE):
+    def __init__(
+            self,
+            username,
+            password,
+            client_id,
+            client_secret,
+            flume_token_file=TOKEN_FILE,
+            ):
         """Initialize the data object."""
         self._flume_auth = FlumeAuth(
             username,
@@ -189,7 +200,8 @@ class FlumeData:
             device_id,
             time_zone,
             scan_interval,
-             flume_token_file=TOKEN_FILE,):
+            flume_token_file=TOKEN_FILE,
+            ):
         """Initialize the data object."""
         self._flume_auth = FlumeAuth(
             username,
