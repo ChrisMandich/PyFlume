@@ -2,13 +2,14 @@
 import json
 import logging
 from datetime import datetime, timedelta
+from os import path
+from tempfile import gettempdir
 
 import jwt  # pyjwt
 import pytz
 import requests
-from os import path
 from ratelimit import limits, sleep_and_retry
-from tempfile import gettempdir
+
 
 URL_OAUTH_TOKEN = "https://api.flumetech.com/oauth/token"
 TOKEN_FILE = path.join(gettempdir(), "FLUME_TOKEN_FILE")
@@ -22,10 +23,10 @@ def _response_error(message, response):
         error_message = json.loads(response.text)["detailed"][0]
     if response.status_code != 200:
         error_message = json.loads(response.text)["message"]
-
     raise Exception(
-        f"{message}. Response code returned : {response.status_code}. \
-        Error message returned: {error_message}."
+        f'''Message:{message}.
+            Response code returned:{response.status_code}.
+            Eror message returned:{error_message}.'''
     )
 
 
@@ -38,8 +39,7 @@ class FlumeAuth:
             password,
             client_id,
             client_secret,
-            flume_token_file=TOKEN_FILE,
-            ):
+            flume_token_file=TOKEN_FILE,):
         """Initialize the data object."""
         self._creds = {
                         "client_id": client_id,
@@ -155,8 +155,7 @@ class FlumeDeviceList:
             password,
             client_id,
             client_secret,
-            flume_token_file=TOKEN_FILE,
-            ):
+            flume_token_file=TOKEN_FILE,):
         """Initialize the data object."""
         self._flume_auth = FlumeAuth(
             username,
@@ -200,8 +199,7 @@ class FlumeData:
             device_id,
             time_zone,
             scan_interval,
-            flume_token_file=TOKEN_FILE,
-            ):
+            flume_token_file=TOKEN_FILE,):
         """Initialize the data object."""
         self._flume_auth = FlumeAuth(
             username,
