@@ -25,18 +25,30 @@ client_secret:
 ```
 ## Retrieve a list of devices: 
 ```
-flume_devices = FlumeDeviceList(username, password, client_id, client_secret)`
+import pyflume
+
+flume_devices = pyflume.FlumeDeviceList(username, password, client_id, client_secret)`
 ```
 
 ## Return Data for all Flume Devices of Type 2
 
 ```
+import pyflume
+from datetime import timedelta
+
+username="<username>"
+password="<password>"
+client_id="<client_id>"
+client_secret="<client_secret>"
+
+flume_devices = pyflume.FlumeDeviceList(username, password, client_id, client_secret)
+
 SCAN_INTERVAL = timedelta(minutes=1) # Using datetime
 TIME_ZONE='America/Los_Angeles' # Using pytz
 
 for device in flume_devices.device_list:
     if device["type"] == 2:
-        flume = FlumeData(
+        flume = pyflume.FlumeData(
             username,
             password,
             client_id,
