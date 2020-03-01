@@ -1,0 +1,58 @@
+{
+   "http_message" : "OK",
+   "code" : 602,
+   "pagination" : null,
+   "message" : "Request OK",
+   "count" : 1,
+   "success" : true,
+   "detailed" : null,
+   "data" : [
+      {
+         "type" : 2,
+         "user_id" : 1111,
+         "bridge_id" : "6248148189204194444",
+         "description" : null,
+         "registered" : true,
+         "added_datetime" : "2017-03-16T14:30:13.284Z",
+         "id" : "6248148189204194987",
+         "name" : null,
+         "location" : {
+            "state" : "CA",
+            "tz" : "America/Los_Angeles",
+            "user_id" : 1111,
+            "id" : 1,
+            "building_type" : "SINGLE_FAMILY_HOME",
+            "city" : "San Luis Obispo",
+            "installation" : "DONE",
+            "address" : "1 Flume Drive",
+            "usage_profile" : {
+               "irrigation" : "GARDEN_HOSE",
+               "bathrooms" : "3",
+               "score" : 1,
+               "irrigation_max_cycle" : 60,
+               "residents" : "1",
+               "irrigation_freq" : "2_PER_WEEK",
+               "id" : 117
+            },
+            "primary_location" : true,
+            "address_2" : null,
+            "country" : "United States",
+            "name" : "Primary Residence",
+            "postal_code" : "93401"
+         },
+         "oriented" : true,
+         "last_seen" : "2017-04-13T01:31:36.000Z",
+         "user" : {
+            "first_name" : "Flume",
+            "signup_datetime" : "2016-12-01T00:12:19.928Z",
+            "id" : 1111,
+            "email_address" : "support@flumetech.com",
+            "type" : "USER",
+            "phone" : "4444444444",
+            "last_name" : "Tech",
+            "status" : "Active"
+         }
+      }
+   ],
+   "http_code" : 200
+}

@@ -1,0 +1,46 @@
+{
+   "code" : 602,
+   "http_code" : 200,
+   "pagination" : null,
+   "success" : true,
+   "http_message" : "OK",
+   "data" : [
+      {
+         "update" : [
+            {
+               "datetime" : "2016-04-04 00:00:00",
+               "value" : 1000
+            },
+            {
+               "value" : 200,
+               "datetime" : "2016-04-05 00:00:00"
+            },
+            {
+               "value" : 21,
+               "datetime" : "2016-04-06 00:00:00"
+            },
+            {
+               "datetime" : "2016-04-07 00:00:00",
+               "value" : 30
+            }
+         ],
+         "abc" : [
+            {
+               "value" : 20,
+               "datetime" : "2016-04-01 00:00:00"
+            },
+            {
+               "value" : 35.5,
+               "datetime" : "2016-07-01 00:00:00"
+            },
+            {
+               "datetime" : "2016-10-01 00:00:00",
+               "value" : 40
+            }
+         ]
+      }
+   ],
+   "message" : "Request OK",
+   "detailed" : null,
+   "count" : 0
+}
