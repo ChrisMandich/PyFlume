@@ -14,6 +14,8 @@ from requests import Session
 TOKEN_FILE = path.join(gettempdir(), "FLUME_TOKEN_FILE")
 API_LIMIT = 60
 
+DEFAULT_TIMEOUT = 30
+
 API_BASE_URL = "https://api.flumetech.com"
 URL_OAUTH_TOKEN = API_BASE_URL + "/oauth/token"
 API_QUERY_URL = API_BASE_URL + "/users/{user_id}/devices/{device_id}/query"
@@ -69,6 +71,7 @@ class FlumeAuth:
         client_secret,
         flume_token_file=TOKEN_FILE,
         http_session: Session = Session(),
+        timeout=DEFAULT_TIMEOUT,
     ):
         """Initialize the data object."""
 
@@ -80,6 +83,7 @@ class FlumeAuth:
         }
 
         self._http_session = http_session
+        self._timeout = timeout
         self._token_file = flume_token_file
         self._token = None
         self._decoded_token = None
@@ -92,7 +96,11 @@ class FlumeAuth:
 
         headers = {"content-type": "application/json"}
         response = self._http_session.request(
-            "POST", URL_OAUTH_TOKEN, json=payload, headers=headers
+            "POST",
+            URL_OAUTH_TOKEN,
+            json=payload,
+            headers=headers,
+            timeout=self._timeout,
         )
 
         LOGGER.debug("Token Payload: %s", payload)
@@ -189,8 +197,10 @@ class FlumeDeviceList:
         client_secret,
         flume_token_file=TOKEN_FILE,
         http_session: Session = Session(),
+        timeout=DEFAULT_TIMEOUT,
     ):
         """Initialize the data object."""
+        self._timeout = timeout
         self._http_session = http_session
         self._flume_auth = FlumeAuth(
             username,
@@ -199,6 +209,7 @@ class FlumeDeviceList:
             client_secret,
             flume_token_file,
             http_session=http_session,
+            timeout=timeout,
         )
         self.device_list = self.get_devices()
 
@@ -213,6 +224,7 @@ class FlumeDeviceList:
             url,
             headers=self._flume_auth.authorization_header,
             params=querystring,
+            timeout=self._timeout,
         )
 
         LOGGER.debug("get_devices Response: %s", response.text)
@@ -238,9 +250,11 @@ class FlumeData:
         flume_token_file=TOKEN_FILE,
         update_on_init=True,
         http_session: Session = Session(),
+        timeout=DEFAULT_TIMEOUT,
     ):
         """Initialize the data object."""
         self._http_session = http_session
+        self._timeout = timeout
         self._flume_auth = FlumeAuth(
             username,
             password,
@@ -248,6 +262,7 @@ class FlumeData:
             client_secret,
             flume_token_file,
             http_session=http_session,
+            timeout=timeout,
         )
 
         self._scan_interval = scan_interval
@@ -267,7 +282,10 @@ class FlumeData:
             user_id=self._flume_auth.user_id, device_id=self.device_id
         )
         response = self._http_session.post(
-            url, json=json_payload, headers=self._flume_auth.authorization_header
+            url,
+            json=json_payload,
+            headers=self._flume_auth.authorization_header,
+            timeout=self._timeout,
         )
 
         LOGGER.debug("Update URL: %s", url)
