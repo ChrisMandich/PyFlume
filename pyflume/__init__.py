@@ -133,7 +133,6 @@ class FlumeAuth:
 
     def verify_token(self):
         """Check to see if token is expiring in 12 hours."""
-
         token_expiration = datetime.fromtimestamp(self._decoded_token["exp"])
         time_difference = datetime.now() + timedelta(hours=12)
         LOGGER.debug("Token expiration time: %s", token_expiration)
@@ -190,27 +189,12 @@ class FlumeDeviceList:
     """Get Flume Device List from API."""
 
     def __init__(
-        self,
-        username,
-        password,
-        client_id,
-        client_secret,
-        flume_token_file=TOKEN_FILE,
-        http_session: Session = Session(),
-        timeout=DEFAULT_TIMEOUT,
+        self, flume_auth, http_session: Session = Session(), timeout=DEFAULT_TIMEOUT,
     ):
         """Initialize the data object."""
         self._timeout = timeout
         self._http_session = http_session
-        self._flume_auth = FlumeAuth(
-            username,
-            password,
-            client_id,
-            client_secret,
-            flume_token_file,
-            http_session=http_session,
-            timeout=timeout,
-        )
+        self._flume_auth = flume_auth
         self.device_list = self.get_devices()
 
     def get_devices(self):
@@ -232,7 +216,7 @@ class FlumeDeviceList:
         # Check for response errors.
         _response_error("Impossible to retreive devices", response)
 
-        return json.loads(response.text)["data"]
+        return response.json()["data"]
 
 
 class FlumeData:
@@ -240,14 +224,9 @@ class FlumeData:
 
     def __init__(
         self,
-        username,
-        password,
-        client_id,
-        client_secret,
+        flume_auth,
         device_id,
-        time_zone,
         scan_interval,
-        flume_token_file=TOKEN_FILE,
         update_on_init=True,
         http_session: Session = Session(),
         timeout=DEFAULT_TIMEOUT,
@@ -255,16 +234,7 @@ class FlumeData:
         """Initialize the data object."""
         self._http_session = http_session
         self._timeout = timeout
-        self._flume_auth = FlumeAuth(
-            username,
-            password,
-            client_id,
-            client_secret,
-            flume_token_file,
-            http_session=http_session,
-            timeout=timeout,
-        )
-
+        self._flume_auth = flume_auth
         self._scan_interval = scan_interval
         self.device_id = device_id
         self.value = None
@@ -275,6 +245,10 @@ class FlumeData:
     @limits(calls=2, period=API_LIMIT)
     def update(self):
         """Return updated value for session."""
+        return self.update_force()
+
+    def update_force(self):
+        """Return updated value for session without auto retry or limits."""
         self._flume_auth.read_token_file()
 
         json_payload = _generate_api_query_payload(self._scan_interval)
@@ -297,4 +271,4 @@ class FlumeData:
             f"Can't update flume data for user id {self._flume_auth.user_id}", response
         )
 
-        self.value = json.loads(response.text)["data"][0]["update"][0]["value"]
+        self.value = response.json()["data"][0]["update"][0]["value"]

@@ -43,9 +43,11 @@ class TestFlumeDeviceList(unittest.TestCase):
             API_DEVICES_URL.format(user_id="user_id"),
             text=load_fixture("devices.json"),
         )
-        flume_devices = pyflume.FlumeDeviceList(
+        flume_auth = pyflume.FlumeAuth(
             "username", "password", "client_id", "client_secret"
         )
+
+        flume_devices = pyflume.FlumeDeviceList(flume_auth)
         devices = flume_devices.get_devices()
         assert len(devices) == 1
         assert devices[0]["user_id"] == 1111
@@ -63,16 +65,16 @@ class TestFlumeData(unittest.TestCase):
             text=load_fixture("query.json"),
         )
 
+        flume_auth = pyflume.FlumeAuth(
+            "username", "password", "client_id", "client_secret"
+        )
+
         flume = pyflume.FlumeData(
-            "username",
-            "password",
-            "client_id",
-            "client_secret",
+            flume_auth,
             "device_id",
-            "any",
             SCAN_INTERVAL,
             http_session=Session(),
-            update_on_init=False
+            update_on_init=False,
         )
         assert flume.value == None
         flume.update()

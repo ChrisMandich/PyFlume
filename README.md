@@ -41,20 +41,17 @@ password="<password>"
 client_id="<client_id>"
 client_secret="<client_secret>"
 
-flume_devices = pyflume.FlumeDeviceList(username, password, client_id, client_secret)
+flume_auth = pyflume.FlumeAuth(username, password, client_id, client_secret)
+
+flume_devices = pyflume.FlumeDeviceList(flume_auth)
 
 SCAN_INTERVAL = timedelta(minutes=1) # Using datetime
-TIME_ZONE='America/Los_Angeles' # Using pytz
 
 for device in flume_devices.device_list:
     if device["type"] == 2:
         flume = pyflume.FlumeData(
-            username,
-            password,
-            client_id,
-            client_secret,
+            flume_auth,
             device["id"],
-            TIME_ZONE,
             SCAN_INTERVAL,
         )
 ```
