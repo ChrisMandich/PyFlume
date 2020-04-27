@@ -7,7 +7,6 @@ from os import path
 from tempfile import gettempdir
 
 import jwt  # pyjwt
-import pytz
 from ratelimit import limits, sleep_and_retry
 from requests import Session
 
@@ -24,24 +23,48 @@ API_DEVICES_URL = API_BASE_URL + "/users/{user_id}/devices"
 LOGGER = logging.getLogger(__name__)
 
 
-def _generate_api_query_payload(scan_interval):
-    utc_now = pytz.utc.localize(datetime.utcnow())
+def _generate_api_query_payload():
 
-    since_datetime = (utc_now - scan_interval).strftime("%Y-%m-%d %H:%M:00")
-    until_datetime = utc_now.strftime("%Y-%m-%d %H:%M:00")
+    def format_datetime(time):
+        return time.isoformat(' ', 'seconds')
 
-    return {
-        "queries": [
-            {
-                "since_datetime": since_datetime,
-                "until_datetime": until_datetime,
-                "bucket": "MIN",
-                "request_id": "update",
-                "units": "GALLONS",
-                "tz": "UTC",
-            }
-        ]
-    }
+    queries = [
+        {
+            "request_id": "current_min",
+            "bucket": "MIN",
+            "since_datetime": format_datetime(datetime.now()),
+        },
+        {
+            "request_id": "today",
+            "bucket": "DAY",
+            "since_datetime": format_datetime(datetime.today()),
+        },
+        {
+            "request_id": "this_month",
+            "bucket": "MON",
+            "since_datetime": format_datetime(datetime.today()),
+        },
+        {
+            "request_id": "last_60_min",
+            "operation": "SUM",
+            "bucket": "MIN",
+            "since_datetime": format_datetime(datetime.now() - timedelta(minutes=60)),
+        },
+        {
+            "request_id": "last_24_hrs",
+            "operation": "SUM",
+            "bucket": "HR",
+            "since_datetime": format_datetime(datetime.now() - timedelta(hours=23)),
+        },
+        {
+            "request_id": "last_30_days",
+            "operation": "SUM",
+            "bucket": "DAY",
+            "since_datetime": format_datetime(datetime.now() - timedelta(days=29)),
+        },
+    ]
+
+    return {"queries": queries}
 
 
 def _response_error(message, response):
@@ -226,7 +249,6 @@ class FlumeData:
         self,
         flume_auth,
         device_id,
-        scan_interval,
         update_on_init=True,
         http_session: Session = Session(),
         timeout=DEFAULT_TIMEOUT,
@@ -235,9 +257,8 @@ class FlumeData:
         self._http_session = http_session
         self._timeout = timeout
         self._flume_auth = flume_auth
-        self._scan_interval = scan_interval
         self.device_id = device_id
-        self.value = None
+        self.values = {}
         if update_on_init:
             self.update()
 
@@ -251,7 +272,9 @@ class FlumeData:
         """Return updated value for session without auto retry or limits."""
         self._flume_auth.read_token_file()
 
-        json_payload = _generate_api_query_payload(self._scan_interval)
+        json_payload = _generate_api_query_payload()
+        query_keys = [q["request_id"] for q in json_payload["queries"]]
+
         url = API_QUERY_URL.format(
             user_id=self._flume_auth.user_id, device_id=self.device_id
         )
@@ -271,4 +294,5 @@ class FlumeData:
             f"Can't update flume data for user id {self._flume_auth.user_id}", response
         )
 
-        self.value = response.json()["data"][0]["update"][0]["value"]
+        responses = response.json()["data"][0]
+        self.values = {k: responses[k][0]["value"] for k in query_keys}
