@@ -1,6 +1,6 @@
 """Package to interact with Flume Sensor."""
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 import json
 import logging
 from os import path
@@ -293,8 +293,8 @@ class FlumeNotificationList:
             flume_auth,
             http_session: Session = Session(),
             timeout=DEFAULT_TIMEOUT,
-            read = "false",
-                 ):
+            read="false",
+    ):
         """Initialize the data object."""
         self._timeout = timeout
         self._http_session = http_session
@@ -312,8 +312,8 @@ class FlumeNotificationList:
         response = self._http_session.request(
             "GET",
             url,
-            headers = self._flume_auth.authorization_header,
-            params = query_string,
+            headers=self._flume_auth.authorization_header,
+            params=query_string,
             timeout=self._timeout,
         )
 
@@ -336,7 +336,7 @@ class FlumeData:
         update_on_init=True,
         http_session: Session = Session(),
         timeout=DEFAULT_TIMEOUT,
-        query_payload = None,
+        query_payload=None,
     ):
         """Initialize the data object."""
         self._http_session = http_session
