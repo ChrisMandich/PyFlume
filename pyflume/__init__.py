@@ -1,12 +1,12 @@
 """Package to interact with Flume Sensor."""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import json
 import logging
 from os import path
 from tempfile import gettempdir
 
-import jwt  # pyjwt
+import jwt  # pip install pyjwt
 from ratelimit import limits, sleep_and_retry
 from requests import Session
 
@@ -19,51 +19,94 @@ API_BASE_URL = "https://api.flumetech.com"
 URL_OAUTH_TOKEN = API_BASE_URL + "/oauth/token"
 API_QUERY_URL = API_BASE_URL + "/users/{user_id}/devices/{device_id}/query"
 API_DEVICES_URL = API_BASE_URL + "/users/{user_id}/devices"
+API_NOTIFICATIONS_URL = API_BASE_URL + "/users/{user_id}/notifications"
 
 LOGGER = logging.getLogger(__name__)
 
 
-def _generate_api_query_payload():
+def _generate_api_query_payload(scan_interval):
+    datetime_today = datetime.today()
 
-    def format_datetime(time):
-        return time.isoformat(' ', 'seconds')
+    def format_time(time):
+        return time.isoformat(" ", "seconds")
+
+    def format_start_today():
+        return format_time(datetime.combine(datetime_today, datetime.min.time()))
+
+    def format_start_month():
+        return format_time(datetime.combine(datetime_today.replace(day=1), datetime.min.time()))
+
+    def format_start_week():
+        return format_time(datetime.combine(
+            datetime_today - timedelta(
+                days=datetime_today.weekday()
+            )
+            , datetime.min.time()))
 
     queries = [
         {
+            "request_id": "current_interval",
+            "bucket": "MIN",
+            "since_datetime": format_time(datetime_today - scan_interval),
+            "until_datetime": format_time(datetime_today.replace(second=0)),
+            "operation": "SUM",
+            "units": "GALLONS",
+        },
+        {
             "request_id": "current_min",
             "bucket": "MIN",
-            "since_datetime": format_datetime(datetime.now()),
+            "since_datetime": format_time(datetime_today),
+            "operation": "SUM",
+            "units": "GALLONS",
         },
         {
             "request_id": "today",
             "bucket": "DAY",
-            "since_datetime": format_datetime(datetime.today()),
+            "since_datetime": format_start_today(),
+            "until_datetime": format_time(datetime_today),
+            "operation": "SUM",
+            "units": "GALLONS",
         },
         {
-            "request_id": "this_month",
+            "request_id": "week_to_date",
+            "bucket": "DAY",
+            "since_datetime": format_start_week(),
+            "until_datetime": format_time(datetime_today),
+            "operation": "SUM",
+            "units": "GALLONS",
+        },
+        {
+            "request_id": "month_to_date",
             "bucket": "MON",
-            "since_datetime": format_datetime(datetime.today()),
+            "since_datetime": format_start_month(),
+            "until_datetime": format_time(datetime_today),
+            "units": "GALLONS",
         },
         {
             "request_id": "last_60_min",
-            "operation": "SUM",
             "bucket": "MIN",
-            "since_datetime": format_datetime(datetime.now() - timedelta(minutes=60)),
+            "since_datetime": format_time(datetime_today - timedelta(minutes=60)),
+            "until_datetime": format_time(datetime_today),
+            "operation": "SUM",
+            "units": "GALLONS",
         },
         {
             "request_id": "last_24_hrs",
-            "operation": "SUM",
             "bucket": "HR",
-            "since_datetime": format_datetime(datetime.now() - timedelta(hours=23)),
+            "since_datetime": format_time(datetime_today - timedelta(hours=24)),
+            "until_datetime": format_time(datetime_today),
+            "operation": "SUM",
+            "units": "GALLONS",
         },
         {
             "request_id": "last_30_days",
-            "operation": "SUM",
             "bucket": "DAY",
-            "since_datetime": format_datetime(datetime.now() - timedelta(days=29)),
-        },
+            "since_datetime": format_time(datetime_today - timedelta(days=30)),
+            "until_datetime": format_time(datetime_today),
+            "operation": "SUM",
+            "units": "GALLONS",
+        }
     ]
-
     return {"queries": queries}
 
 
@@ -224,13 +267,13 @@ class FlumeDeviceList:
         """Return all available devices from Flume API."""
 
         url = API_DEVICES_URL.format(user_id=self._flume_auth.user_id)
-        querystring = {"user": "true", "location": "true"}
+        query_string = {"user": "true", "location": "true"}
 
         response = self._http_session.request(
             "GET",
             url,
             headers=self._flume_auth.authorization_header,
-            params=querystring,
+            params=query_string,
             timeout=self._timeout,
         )
 
@@ -242,6 +285,46 @@ class FlumeDeviceList:
         return response.json()["data"]
 
 
+class FlumeNotificationList:
+    """Get Flume Notifications list from API."""
+
+    def __init__(
+            self,
+            flume_auth,
+            http_session: Session = Session(),
+            timeout=DEFAULT_TIMEOUT,
+            read = "false",
+                 ):
+        """Initialize the data object."""
+        self._timeout = timeout
+        self._http_session = http_session
+        self._flume_auth = flume_auth
+        self._read = read
+        self.notification_list = self.get_notifications()
+
+    def get_notifications(self):
+        """Return all notifications from devices owned by the user"""
+
+        url = API_NOTIFICATIONS_URL.format(user_id=self._flume_auth.user_id)
+
+        query_string = {"limit": "50", "offset": "0", "sort_direction": "ASC", "read": self._read}
+
+        response = self._http_session.request(
+            "GET",
+            url,
+            headers = self._flume_auth.authorization_header,
+            params = query_string,
+            timeout=self._timeout,
+        )
+
+        LOGGER.debug("get_notifications Response: %s", response.text)
+
+        # Check for response errors.
+        _response_error("Impossible to retrieve notifications", response)
+        print(json.dumps(response.json()))
+        return response.json()["data"]
+
+
 class FlumeData:
     """Get the latest data and update the states."""
 
@@ -249,16 +332,22 @@ class FlumeData:
         self,
         flume_auth,
         device_id,
+        scan_interval,
         update_on_init=True,
         http_session: Session = Session(),
         timeout=DEFAULT_TIMEOUT,
+        query_payload = None,
     ):
         """Initialize the data object."""
         self._http_session = http_session
         self._timeout = timeout
         self._flume_auth = flume_auth
+        self._scan_interval = scan_interval
         self.device_id = device_id
         self.values = {}
+        if query_payload == None:
+            self._query_payload = _generate_api_query_payload(self._scan_interval)
+        self._query_keys = [q["request_id"] for q in self._query_payload["queries"]]
         if update_on_init:
             self.update()
 
@@ -272,21 +361,18 @@ class FlumeData:
         """Return updated value for session without auto retry or limits."""
         self._flume_auth.read_token_file()
 
-        json_payload = _generate_api_query_payload()
-        query_keys = [q["request_id"] for q in json_payload["queries"]]
-
         url = API_QUERY_URL.format(
             user_id=self._flume_auth.user_id, device_id=self.device_id
         )
         response = self._http_session.post(
             url,
-            json=json_payload,
+            json=self._query_payload,
             headers=self._flume_auth.authorization_header,
             timeout=self._timeout,
         )
 
         LOGGER.debug("Update URL: %s", url)
-        LOGGER.debug("Update json_payload: %s", json_payload)
+        LOGGER.debug("Update query_payload: %s", self._query_payload)
         LOGGER.debug("Update Response: %s", response.text)
 
         # Check for response errors.
@@ -295,4 +381,5 @@ class FlumeData:
         )
 
         responses = response.json()["data"][0]
-        self.values = {k: responses[k][0]["value"] for k in query_keys}
+
+        self.values = {k: responses[k][0]["value"] for k in self._query_keys}
