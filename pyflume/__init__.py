@@ -34,14 +34,17 @@ def _generate_api_query_payload(scan_interval):
         return format_time(datetime.combine(datetime_today, datetime.min.time()))
 
     def format_start_month():
-        return format_time(datetime.combine(datetime_today.replace(day=1), datetime.min.time()))
+        return format_time(
+            datetime.combine(datetime_today.replace(day=1), datetime.min.time())
+        )
 
     def format_start_week():
-        return format_time(datetime.combine(
-            datetime_today - timedelta(
-                days=datetime_today.weekday()
+        return format_time(
+            datetime.combine(
+                datetime_today - timedelta(days=datetime_today.weekday()),
+                datetime.min.time(),
             )
-            , datetime.min.time()))
+        )
 
     queries = [
         {
@@ -105,7 +108,7 @@ def _generate_api_query_payload(scan_interval):
             "until_datetime": format_time(datetime_today),
             "operation": "SUM",
             "units": "GALLONS",
-        }
+        },
     ]
     return {"queries": queries}
 
@@ -289,11 +292,11 @@ class FlumeNotificationList:
     """Get Flume Notifications list from API."""
 
     def __init__(
-            self,
-            flume_auth,
-            http_session: Session = Session(),
-            timeout=DEFAULT_TIMEOUT,
-            read="false",
+        self,
+        flume_auth,
+        http_session: Session = Session(),
+        timeout=DEFAULT_TIMEOUT,
+        read="false",
     ):
         """Initialize the data object."""
         self._timeout = timeout
@@ -307,7 +310,12 @@ class FlumeNotificationList:
 
         url = API_NOTIFICATIONS_URL.format(user_id=self._flume_auth.user_id)
 
-        query_string = {"limit": "50", "offset": "0", "sort_direction": "ASC", "read": self._read}
+        query_string = {
+            "limit": "50",
+            "offset": "0",
+            "sort_direction": "ASC",
+            "read": self._read,
+        }
 
         response = self._http_session.request(
             "GET",
