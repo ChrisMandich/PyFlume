@@ -390,4 +390,4 @@ class FlumeData:
 
         responses = response.json()["data"][0]
 
-        self.values = {k: responses[k][0]["value"] for k in self._query_keys}
+        self.values = {k: responses[k][0] if len(responses[k]) == 1 else None for k in self._query_keys}
