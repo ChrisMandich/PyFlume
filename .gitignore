@@ -1,4 +1,5 @@
 flume_token
+flume.log
 test-oauth.py
 test-pyflume.py
 build/*

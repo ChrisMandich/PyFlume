@@ -7,6 +7,7 @@ from os import path
 from tempfile import gettempdir
 
 import jwt  # pip install pyjwt
+import pytz
 from ratelimit import limits, sleep_and_retry
 from requests import Session
 
@@ -25,10 +26,10 @@ LOGGER = logging.getLogger(__name__)
 
 
 def _generate_api_query_payload(scan_interval):
-    datetime_today = datetime.today()
+    datetime_today = pytz.utc.localize(datetime.utcnow())
 
     def format_time(time):
-        return time.isoformat(" ", "seconds")
+        return time.strftime("%Y-%m-%d %H:%M:00")
 
     def format_start_today():
         return format_time(datetime.combine(datetime_today, datetime.min.time()))
@@ -50,17 +51,11 @@ def _generate_api_query_payload(scan_interval):
         {
             "request_id": "current_interval",
             "bucket": "MIN",
-            "since_datetime": format_time(datetime_today - scan_interval),
+            "since_datetime": format_time((datetime_today - scan_interval).replace(second=0)),
             "until_datetime": format_time(datetime_today.replace(second=0)),
             "operation": "SUM",
             "units": "GALLONS",
-        },
-        {
-            "request_id": "current_min",
-            "bucket": "MIN",
-            "since_datetime": format_time(datetime_today),
-            "operation": "SUM",
-            "units": "GALLONS",
+            "tz": "UTC",
         },
         {
             "request_id": "today",
@@ -69,6 +64,7 @@ def _generate_api_query_payload(scan_interval):
             "until_datetime": format_time(datetime_today),
             "operation": "SUM",
             "units": "GALLONS",
+            "tz": "UTC",
         },
         {
             "request_id": "week_to_date",
@@ -77,6 +73,7 @@ def _generate_api_query_payload(scan_interval):
             "until_datetime": format_time(datetime_today),
             "operation": "SUM",
             "units": "GALLONS",
+            "tz": "UTC",
         },
         {
             "request_id": "month_to_date",
@@ -84,6 +81,7 @@ def _generate_api_query_payload(scan_interval):
             "since_datetime": format_start_month(),
             "until_datetime": format_time(datetime_today),
             "units": "GALLONS",
+            "tz": "UTC",
         },
         {
             "request_id": "last_60_min",
@@ -92,6 +90,7 @@ def _generate_api_query_payload(scan_interval):
             "until_datetime": format_time(datetime_today),
             "operation": "SUM",
             "units": "GALLONS",
+            "tz": "UTC",
         },
         {
             "request_id": "last_24_hrs",
@@ -100,6 +99,7 @@ def _generate_api_query_payload(scan_interval):
             "until_datetime": format_time(datetime_today),
             "operation": "SUM",
             "units": "GALLONS",
+            "tz": "UTC",
         },
         {
             "request_id": "last_30_days",
@@ -108,6 +108,7 @@ def _generate_api_query_payload(scan_interval):
             "until_datetime": format_time(datetime_today),
             "operation": "SUM",
             "units": "GALLONS",
+            "tz": "UTC",
         },
     ]
     return {"queries": queries}
@@ -391,6 +392,6 @@ class FlumeData:
         responses = response.json()["data"][0]
 
         self.values = {
-            k: responses[k][0] if len(responses[k]) == 1 else None
+            k: responses[k][0]["value"] if len(responses[k]) == 1 else None
             for k in self._query_keys
         }
