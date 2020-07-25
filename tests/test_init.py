@@ -100,7 +100,6 @@ class TestFlumeData(unittest.TestCase):
         print(flume.values)
         assert flume.values == {
             'current_interval': 14.38855184,
-            'current_min': 0,
             'today': 56.6763912,
             'week_to_date': 1406.07065872,
             'month_to_date': 56.6763912,
