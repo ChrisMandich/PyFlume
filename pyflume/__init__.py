@@ -51,7 +51,9 @@ def _generate_api_query_payload(scan_interval):
         {
             "request_id": "current_interval",
             "bucket": "MIN",
-            "since_datetime": format_time((datetime_today - scan_interval).replace(second=0)),
+            "since_datetime": format_time(
+                (datetime_today - scan_interval).replace(second=0)
+            ),
             "until_datetime": format_time(datetime_today.replace(second=0)),
             "operation": "SUM",
             "units": "GALLONS",
