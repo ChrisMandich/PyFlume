@@ -91,6 +91,7 @@ class TestFlumeData(unittest.TestCase):
         flume = pyflume.FlumeData(
             flume_auth,
             "device_id",
+            "America/Los_Angeles",
             SCAN_INTERVAL,
             http_session=Session(),
             update_on_init=False,

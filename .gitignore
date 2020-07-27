@@ -7,3 +7,5 @@ dist/*
 pyflume/__pycache__
 PyFlume.egg-info
 .idea/*
+.vscode/*
+*pyc

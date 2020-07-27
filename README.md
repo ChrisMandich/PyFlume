@@ -30,6 +30,9 @@ client_secret:
 import pyflume
 from datetime import timedelta
 from requests import Session
+import logging
+
+logging.basicConfig(filename="flume.log",level=logging.DEBUG)
 
 KEY_DEVICE_TYPE = "type"
 KEY_DEVICE_ID = "id"
@@ -57,10 +60,12 @@ for device in flume_devices.device_list:
     if device[KEY_DEVICE_TYPE] == FLUME_TYPE_SENSOR:
         print(device[KEY_DEVICE_ID])
         device_id = device[KEY_DEVICE_ID]
+        device_timezone = device['location']['tz']
 
 flume = pyflume.FlumeData(
             auth,
             device_id,
+            device_timezone,
             SCAN_INTERVAL,
             http_session=Session(),
         )
@@ -77,7 +82,7 @@ print("AUTH HEADER")
 print(auth.authorization_header)
 
 print("QUERY PAYLOAD")
-print(pyflume._generate_api_query_payload(SCAN_INTERVAL))
+print(pyflume._generate_api_query_payload(SCAN_INTERVAL, device_timezone))
 
 print("FLUME VALUES")
 print(flume.values)

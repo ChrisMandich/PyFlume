@@ -7,7 +7,7 @@ from os import path
 from tempfile import gettempdir
 
 import jwt  # pip install pyjwt
-import pytz
+from pytz import timezone, utc
 from ratelimit import limits, sleep_and_retry
 from requests import Session
 
@@ -25,24 +25,24 @@ API_NOTIFICATIONS_URL = API_BASE_URL + "/users/{user_id}/notifications"
 LOGGER = logging.getLogger(__name__)
 
 
-def _generate_api_query_payload(scan_interval):
-    datetime_today = pytz.utc.localize(datetime.utcnow())
+def _generate_api_query_payload(scan_interval, device_tz):
+    datetime_localtime = utc.localize(datetime.utcnow()).astimezone(timezone(device_tz))
 
     def format_time(time):
-        return time.strftime("%Y-%m-%d %H:%M:00")
+        return time.replace(second=0).strftime("%Y-%m-%d %H:%M:%S")
 
     def format_start_today():
-        return format_time(datetime.combine(datetime_today, datetime.min.time()))
+        return format_time(datetime.combine(datetime_localtime, datetime.min.time()))
 
     def format_start_month():
         return format_time(
-            datetime.combine(datetime_today.replace(day=1), datetime.min.time())
+            datetime.combine(datetime_localtime.replace(day=1), datetime.min.time())
         )
 
     def format_start_week():
         return format_time(
             datetime.combine(
-                datetime_today - timedelta(days=datetime_today.weekday()),
+                datetime_localtime - timedelta(days=datetime_localtime.weekday()),
                 datetime.min.time(),
             )
         )
@@ -52,65 +52,58 @@ def _generate_api_query_payload(scan_interval):
             "request_id": "current_interval",
             "bucket": "MIN",
             "since_datetime": format_time(
-                (datetime_today - scan_interval).replace(second=0)
+                (datetime_localtime - scan_interval).replace(second=0)
             ),
-            "until_datetime": format_time(datetime_today.replace(second=0)),
+            "until_datetime": format_time(datetime_localtime.replace(second=0)),
             "operation": "SUM",
             "units": "GALLONS",
-            "tz": "UTC",
         },
         {
             "request_id": "today",
             "bucket": "DAY",
             "since_datetime": format_start_today(),
-            "until_datetime": format_time(datetime_today),
+            "until_datetime": format_time(datetime_localtime),
             "operation": "SUM",
             "units": "GALLONS",
-            "tz": "UTC",
         },
         {
             "request_id": "week_to_date",
             "bucket": "DAY",
             "since_datetime": format_start_week(),
-            "until_datetime": format_time(datetime_today),
+            "until_datetime": format_time(datetime_localtime),
             "operation": "SUM",
             "units": "GALLONS",
-            "tz": "UTC",
         },
         {
             "request_id": "month_to_date",
             "bucket": "MON",
             "since_datetime": format_start_month(),
-            "until_datetime": format_time(datetime_today),
+            "until_datetime": format_time(datetime_localtime),
             "units": "GALLONS",
-            "tz": "UTC",
         },
         {
             "request_id": "last_60_min",
             "bucket": "MIN",
-            "since_datetime": format_time(datetime_today - timedelta(minutes=60)),
-            "until_datetime": format_time(datetime_today),
+            "since_datetime": format_time(datetime_localtime - timedelta(minutes=60)),
+            "until_datetime": format_time(datetime_localtime),
             "operation": "SUM",
             "units": "GALLONS",
-            "tz": "UTC",
         },
         {
             "request_id": "last_24_hrs",
             "bucket": "HR",
-            "since_datetime": format_time(datetime_today - timedelta(hours=24)),
-            "until_datetime": format_time(datetime_today),
+            "since_datetime": format_time(datetime_localtime - timedelta(hours=24)),
+            "until_datetime": format_time(datetime_localtime),
             "operation": "SUM",
             "units": "GALLONS",
-            "tz": "UTC",
         },
         {
             "request_id": "last_30_days",
             "bucket": "DAY",
-            "since_datetime": format_time(datetime_today - timedelta(days=30)),
-            "until_datetime": format_time(datetime_today),
+            "since_datetime": format_time(datetime_localtime - timedelta(days=30)),
+            "until_datetime": format_time(datetime_localtime),
             "operation": "SUM",
             "units": "GALLONS",
-            "tz": "UTC",
         },
     ]
     return {"queries": queries}
@@ -343,6 +336,7 @@ class FlumeData:
         self,
         flume_auth,
         device_id,
+        device_tz,
         scan_interval,
         update_on_init=True,
         http_session: Session = Session(),
@@ -357,7 +351,9 @@ class FlumeData:
         self.device_id = device_id
         self.values = {}
         if query_payload is None:
-            self._query_payload = _generate_api_query_payload(self._scan_interval)
+            self._query_payload = _generate_api_query_payload(
+                self._scan_interval, device_tz
+            )
         self._query_keys = [q["request_id"] for q in self._query_payload["queries"]]
         if update_on_init:
             self.update()
