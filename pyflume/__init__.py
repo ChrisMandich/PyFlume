@@ -354,7 +354,7 @@ class FlumeData:
             self.query_payload = _generate_api_query_payload(
                 self._scan_interval, device_tz
             )
-        self._query_keys = [q["request_id"] for q in self._query_payload["queries"]]
+        self._query_keys = [q["request_id"] for q in self.query_payload["queries"]]
         if update_on_init:
             self.update()
 
@@ -373,13 +373,13 @@ class FlumeData:
         )
         response = self._http_session.post(
             url,
-            json=self._query_payload,
+            json=self.query_payload,
             headers=self._flume_auth.authorization_header,
             timeout=self._timeout,
         )
 
         LOGGER.debug("Update URL: %s", url)
-        LOGGER.debug("Update query_payload: %s", self._query_payload)
+        LOGGER.debug("Update query_payload: %s", self.query_payload)
         LOGGER.debug("Update Response: %s", response.text)
 
         # Check for response errors.
