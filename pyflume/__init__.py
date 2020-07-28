@@ -349,6 +349,7 @@ class FlumeData:
         self._flume_auth = flume_auth
         self._scan_interval = scan_interval
         self.device_id = device_id
+        self.device_tz = device_tz
         self.values = {}
         if query_payload is None:
             self.query_payload = _generate_api_query_payload(
@@ -367,6 +368,9 @@ class FlumeData:
     def update_force(self):
         """Return updated value for session without auto retry or limits."""
         self._flume_auth.read_token_file()
+        self.query_payload = _generate_api_query_payload(
+            self._scan_interval, self.device_tz
+        )
 
         url = API_QUERY_URL.format(
             user_id=self._flume_auth.user_id, device_id=self.device_id
