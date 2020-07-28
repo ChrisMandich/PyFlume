@@ -351,7 +351,7 @@ class FlumeData:
         self.device_id = device_id
         self.values = {}
         if query_payload is None:
-            self._query_payload = _generate_api_query_payload(
+            self.query_payload = _generate_api_query_payload(
                 self._scan_interval, device_tz
             )
         self._query_keys = [q["request_id"] for q in self._query_payload["queries"]]
