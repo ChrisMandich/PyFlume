@@ -3,7 +3,7 @@
 
 name: Python package
 
-on: [commit, push]
+on: push
 
 jobs:
   build:
