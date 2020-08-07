@@ -3,7 +3,7 @@
 
 name: Package Validation and Tests
 
-on: [push, pull]
+on: [push, pull_request]
 
 jobs:
   build:
