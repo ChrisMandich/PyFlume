@@ -24,6 +24,6 @@ setuptools.setup(
         'ratelimit',
         'pytz',
         'requests',
-        'requests_mock'
+        'requests_mock',
     ],
 )
