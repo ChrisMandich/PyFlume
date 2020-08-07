@@ -1,11 +1,10 @@
 flume_token
 flume.log
-test-oauth.py
-test-pyflume.py
 build/*
 dist/*
 pyflume/__pycache__
 PyFlume.egg-info
 .idea/*
 .vscode/*
+.tox/*
 *pyc
