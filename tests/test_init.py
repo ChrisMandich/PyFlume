@@ -1,8 +1,8 @@
 """Basic tests for flume."""
 from datetime import timedelta
 import os
+from types import MappingProxyType
 import unittest
-from unittest.mock import patch
 
 import pyflume
 from pyflume import (
@@ -21,8 +21,12 @@ CONST_PASSWORD = 'password'  # noqa: S105
 CONST_CLIENT_ID = 'client_id'  # noqa: S105
 CONST_CLIENT_SECRET = 'client_secret'  # noqa: S105
 CONST_USER_ID = 'user_id'
-CONST_READ_TOKEN_FILE = 'pyflume.FlumeAuth._read_token_file'  # noqa: S105
-CONST_WRITE_TOKEN_FILE = 'pyflume.FlumeAuth.write_token_file'  # noqa: S105
+CONST_FLUME_TOKEN = MappingProxyType({
+    'token_type' : 'bearer',
+    'expires_in' : 604800,
+    'refresh_token' : 'fdb8fdbecf1d03ce5e6125c067733c0d51de209c',
+    'access_token' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidXNlcl9pZCIsImV4cCI6Mjk5OTk5OTk5OTcsIngiOiJ5eiJ9.utb2yzcMImBFhDx_mssC_HU0mbfo0D_-VAQOetw5_h0',
+})
 
 
 def load_fixture(filename):
@@ -49,22 +53,18 @@ class TestFlumeAuth(unittest.TestCase):
     """Flume Auth Test Case."""
 
     @requests_mock.Mocker()
-    @patch(CONST_READ_TOKEN_FILE, side_effect=FileNotFoundError)
-    @patch(CONST_WRITE_TOKEN_FILE)
-    def test_init(self, mock, read_token_mock, write_token_mock):
+    def test_init(self, mock):
         """
 
         Test initialization for Flume Auth.
 
         Args:
             mock: Requests mock.
-            read_token_mock: Requests mock token read.
-            write_token_mock: Requests mock token write.
 
         """
         mock.register_uri(CONST_HTTP_METHOD_POST, URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
         auth = pyflume.FlumeAuth(
-            CONST_USERNAME, CONST_PASSWORD, CONST_CLIENT_ID, CONST_CLIENT_SECRET, http_session=Session(),
+            CONST_USERNAME, CONST_PASSWORD, CONST_CLIENT_ID, CONST_CLIENT_SECRET, CONST_FLUME_TOKEN, http_session=Session(),
         )
         assert auth.user_id == CONST_USER_ID  # noqa: S101
 
@@ -73,17 +73,13 @@ class TestFlumeDeviceList(unittest.TestCase):
     """Flume Device List Test Case."""
 
     @requests_mock.Mocker()
-    @patch(CONST_READ_TOKEN_FILE, side_effect=FileNotFoundError)
-    @patch(CONST_WRITE_TOKEN_FILE)
-    def test_init(self, mock, read_token_mock, write_token_mock):
+    def test_init(self, mock):
         """
 
         Test initialization for Flume Device List.
 
         Args:
             mock: Requests mock.
-            read_token_mock: Requests mock token read.
-            write_token_mock: Requests mock token write.
 
         """
         mock.register_uri(CONST_HTTP_METHOD_POST, URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
@@ -93,7 +89,7 @@ class TestFlumeDeviceList(unittest.TestCase):
             text=load_fixture('devices.json'),
         )
         flume_auth = pyflume.FlumeAuth(
-            CONST_USERNAME, CONST_PASSWORD, CONST_CLIENT_ID, CONST_CLIENT_SECRET,
+            CONST_USERNAME, CONST_PASSWORD, CONST_CLIENT_ID, CONST_CLIENT_SECRET, CONST_FLUME_TOKEN,
         )
 
         flume_devices = pyflume.FlumeDeviceList(flume_auth)
@@ -106,17 +102,13 @@ class TestFlumeNotificationList(unittest.TestCase):
     """Test Flume Notification List Test."""
 
     @requests_mock.Mocker()
-    @patch(CONST_READ_TOKEN_FILE, side_effect=FileNotFoundError)
-    @patch(CONST_WRITE_TOKEN_FILE)
-    def test_init(self, mock, read_token_mock, write_token_mock):
+    def test_init(self, mock):
         """
 
         Test initialization for Flume Notification List.
 
         Args:
             mock: Requests mock.
-            read_token_mock: Requests mock token read.
-            write_token_mock: Requests mock token write.
 
         """
         mock.register_uri(CONST_HTTP_METHOD_POST, URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
@@ -126,7 +118,7 @@ class TestFlumeNotificationList(unittest.TestCase):
             text=load_fixture('notification.json'),
         )
         flume_auth = pyflume.FlumeAuth(
-            CONST_USERNAME, CONST_PASSWORD, CONST_CLIENT_ID, CONST_CLIENT_SECRET,
+            CONST_USERNAME, CONST_PASSWORD, CONST_CLIENT_ID, CONST_CLIENT_SECRET, CONST_FLUME_TOKEN,
         )
 
         flume_notifications = pyflume.FlumeNotificationList(flume_auth)
@@ -139,17 +131,13 @@ class TestFlumeData(unittest.TestCase):
     """Test Flume Data Test."""
 
     @requests_mock.Mocker()
-    @patch(CONST_READ_TOKEN_FILE, side_effect=FileNotFoundError)
-    @patch(CONST_WRITE_TOKEN_FILE)
-    def test_init(self, mock, read_token_mock, write_token_mock):
+    def test_init(self, mock):
         """
 
         Test initialization for Flume Data.
 
         Args:
             mock: Requests mock.
-            read_token_mock: Requests mock token read.
-            write_token_mock: Requests mock token write.
 
         """
         mock.register_uri(CONST_HTTP_METHOD_POST, URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
@@ -160,7 +148,7 @@ class TestFlumeData(unittest.TestCase):
         )
 
         flume_auth = pyflume.FlumeAuth(
-            CONST_USERNAME, CONST_PASSWORD, CONST_CLIENT_ID, CONST_CLIENT_SECRET,
+            CONST_USERNAME, CONST_PASSWORD, CONST_CLIENT_ID, CONST_CLIENT_SECRET, CONST_FLUME_TOKEN,
         )
 
         flume = pyflume.FlumeData(
