@@ -3,8 +3,6 @@
 from datetime import datetime, timedelta
 import json
 import logging
-from os import path
-from tempfile import gettempdir
 
 import jwt  # pip install pyjwt
 from pyflume.format_time import (
@@ -17,7 +15,6 @@ from pytz import timezone, utc
 from ratelimit import limits, sleep_and_retry
 from requests import Session
 
-TOKEN_FILE = path.join(gettempdir(), 'FLUME_TOKEN_FILE')
 API_LIMIT = 60
 
 CONST_OPERATION = 'SUM'
@@ -124,7 +121,7 @@ class FlumeAuth(object):  # noqa: WPS214
         password,
         client_id,
         client_secret,
-        flume_token_file=TOKEN_FILE,
+        flume_token=None,
         http_session=None,
         timeout=DEFAULT_TIMEOUT,
     ):
@@ -137,7 +134,7 @@ class FlumeAuth(object):  # noqa: WPS214
             password: Password to authenticate.
             client_id: API client id.
             client_secret: API client secret.
-            flume_token_file: Token file location.
+            flume_token: Pass flume token to variable.
             http_session: Requests Session()
             timeout: Requests timeout for throttling.
 
@@ -156,21 +153,15 @@ class FlumeAuth(object):  # noqa: WPS214
             self._http_session = http_session
 
         self._timeout = timeout
-        self._token_file = flume_token_file
         self._token = None
         self._decoded_token = None
         self.user_id = None
         self.authorization_header = None
-        self.read_token_file()
 
-    def fetch_token(self):
-        """Return authorization token for session."""
+        self._load_token(flume_token)
+        self._verify_token()
 
-        payload = dict({'grant_type': 'password'}, **self._creds)
-        self.load_token(self.token_request(payload))
-        self.write_token_file()
-
-    def load_token(self, token):
+    def _load_token(self, token):
         """
         Update _token, decode token, user_id and auth header.
 
@@ -184,15 +175,18 @@ class FlumeAuth(object):  # noqa: WPS214
             self._decoded_token = jwt.decode(self._token['access_token'], options=jwt_options)
         except jwt.exceptions.DecodeError:
             LOGGER.debug('Poorly formatted Access Token, fetching token using _creds')
-            self.fetch_token()
-
+            self.retrieve_token()
+        except TypeError:
+            LOGGER.debug('Token TypeError, fetching token using _creds')
+            self.retrieve_token()
+        
         self.user_id = self._decoded_token['user_id']
 
         self.authorization_header = {
             'authorization': 'Bearer {0}'.format(self._token.get('access_token')),
         }
 
-    def token_request(self, payload):
+    def _request_token(self, payload):
         """
 
         Request Authorization Payload.
@@ -222,37 +216,7 @@ class FlumeAuth(object):  # noqa: WPS214
 
         return json.loads(response.text)['data'][0]
 
-    def read_token_file(self):
-        """Read local token file and load it."""
-        try:  # noqa: WPS229
-            if not self._decoded_token:
-                # Only re-read from disk if we do not already
-                # have the token in memory
-                self._read_token_file()
-            self.verify_token()
-        except FileNotFoundError:
-            LOGGER.debug('Token file does not exist, fetching token using _creds')
-            self.fetch_token()
-            self.write_token_file()
-        except json.decoder.JSONDecodeError:
-            LOGGER.debug('Invalid JSON in token file, fetching token using _creds')
-            self.fetch_token()
-            self.write_token_file()
-
-    def refresh_token(self):
-        """Return authorization token for session."""
-
-        payload = {
-            'grant_type': 'refresh_token',
-            'refresh_token': self._token['refresh_token'],
-            'client_id': self._creds['client_id'],
-            'client_secret': self._creds['client_secret'],
-        }
-
-        self.load_token(self.token_request(payload))
-        self.write_token_file()
-
-    def verify_token(self):
+    def _verify_token(self):
         """Check to see if token is expiring in 12 hours."""
         token_expiration = datetime.fromtimestamp(self._decoded_token['exp'])
         time_difference = datetime.now() + timedelta(hours=12)  # noqa: WPS432
@@ -262,16 +226,27 @@ class FlumeAuth(object):  # noqa: WPS214
         if token_expiration <= time_difference:
             self.refresh_token()
 
-    def write_token_file(self):
-        """Write token locally."""
-        with open(self._token_file, 'w') as token_file:
-            token_file.write(json.dumps(self._token))
+    def get_token(self):
+        """Return authorization token for session"""
+        return self._token
 
-    def _read_token_file(self):
-        """Read local token file and load it."""
-        with open(self._token_file, 'r') as token_file:
-            self.load_token(json.load(token_file))
+    def refresh_token(self):
+        """Refresh authorization token for session."""
 
+        payload = {
+            'grant_type': 'refresh_token',
+            'refresh_token': self._token['refresh_token'],
+            'client_id': self._creds['client_id'],
+            'client_secret': self._creds['client_secret'],
+        }
+
+        self._load_token(self._request_token(payload))
+
+    def retrieve_token(self):
+        """Return authorization token for session."""
+
+        payload = dict({'grant_type': 'password'}, **self._creds)
+        self._load_token(self._request_token(payload))
 
 class FlumeDeviceList(object):
     """Get Flume Device List from API."""
@@ -456,7 +431,6 @@ class FlumeData(object):
 
     def update_force(self):
         """Return updated value for session without auto retry or limits."""
-        self._flume_auth.read_token_file()
         self.query_payload = _generate_api_query_payload(
             self._scan_interval, self.device_tz,
         )
