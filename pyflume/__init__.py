@@ -161,6 +161,34 @@ class FlumeAuth(object):  # noqa: WPS214
         self._load_token(flume_token)
         self._verify_token()
 
+    def get_token(self):
+        """
+            Return authorization token for session.
+
+        Returns:
+            Returns the current JWT token.
+
+        """
+        return self._token
+
+    def refresh_token(self):
+        """Refresh authorization token for session."""
+
+        payload = {
+            'grant_type': 'refresh_token',
+            'refresh_token': self._token['refresh_token'],
+            'client_id': self._creds['client_id'],
+            'client_secret': self._creds['client_secret'],
+        }
+
+        self._load_token(self._request_token(payload))
+
+    def retrieve_token(self):
+        """Return authorization token for session."""
+
+        payload = dict({'grant_type': 'password'}, **self._creds)
+        self._load_token(self._request_token(payload))
+
     def _load_token(self, token):
         """
         Update _token, decode token, user_id and auth header.
@@ -179,7 +207,7 @@ class FlumeAuth(object):  # noqa: WPS214
         except TypeError:
             LOGGER.debug('Token TypeError, fetching token using _creds')
             self.retrieve_token()
-        
+
         self.user_id = self._decoded_token['user_id']
 
         self.authorization_header = {
@@ -226,27 +254,6 @@ class FlumeAuth(object):  # noqa: WPS214
         if token_expiration <= time_difference:
             self.refresh_token()
 
-    def get_token(self):
-        """Return authorization token for session"""
-        return self._token
-
-    def refresh_token(self):
-        """Refresh authorization token for session."""
-
-        payload = {
-            'grant_type': 'refresh_token',
-            'refresh_token': self._token['refresh_token'],
-            'client_id': self._creds['client_id'],
-            'client_secret': self._creds['client_secret'],
-        }
-
-        self._load_token(self._request_token(payload))
-
-    def retrieve_token(self):
-        """Return authorization token for session."""
-
-        payload = dict({'grant_type': 'password'}, **self._creds)
-        self._load_token(self._request_token(payload))
 
 class FlumeDeviceList(object):
     """Get Flume Device List from API."""
