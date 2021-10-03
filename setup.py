@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     long_description=long_description,
     url='https://github.com/ChrisMandich/PyFlume',
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=['tests','tests.*']),
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
