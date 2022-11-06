@@ -2,7 +2,7 @@
 Authenticates to Flume API, returns a list of devices and allows you to pull the latest sensor results over a period of time.  
 
 ## Configuration
-You can find your Client ID and Client Secret under "API Access" on the [settings page](https://https://portal.flumetech.com/#settings). 
+You can find your Client ID and Client Secret under "API Access" on the [settings page](https://portal.flumetech.com/#settings). 
 
 ## Configuration Variables
 ```
