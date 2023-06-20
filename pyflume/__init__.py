@@ -17,16 +17,20 @@ from requests import Session
 
 API_LIMIT = 60
 
-CONST_OPERATION = 'SUM'
-CONST_UNIT_OF_MEASUREMENT = 'GALLONS'
+CONST_OPERATION = "SUM"
+CONST_UNIT_OF_MEASUREMENT = "GALLONS"
 
 DEFAULT_TIMEOUT = 30
 
-API_BASE_URL = 'https://api.flumetech.com'
-URL_OAUTH_TOKEN = '{0}{1}'.format(API_BASE_URL, '/oauth/token')  # noqa: S105
-API_QUERY_URL = '{0}{1}'.format(API_BASE_URL, '/users/{user_id}/devices/{device_id}/query')
-API_DEVICES_URL = '{0}{1}'.format(API_BASE_URL, '/users/{user_id}/devices')
-API_NOTIFICATIONS_URL = '{0}{1}'.format(API_BASE_URL, '/users/{user_id}/notifications')
+API_BASE_URL = "https://api.flumetech.com"
+URL_OAUTH_TOKEN = "{0}{1}".format(API_BASE_URL, "/oauth/token")  # noqa: S105
+API_QUERY_URL = "{0}{1}".format(
+    API_BASE_URL, "/users/{user_id}/devices/{device_id}/query"
+)
+API_DEVICES_URL = "{0}{1}".format(API_BASE_URL, "/users/{user_id}/devices")
+API_NOTIFICATIONS_URL = "{0}{1}".format(API_BASE_URL, "/users/{user_id}/notifications")
+API_USAGE_URL = "{0}{1}".format(API_BASE_URL, "/users/{user_id}/usage-alerts")
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -36,64 +40,66 @@ def _generate_api_query_payload(scan_interval, device_tz):
 
     queries = [
         {
-            'request_id': 'current_interval',
-            'bucket': 'MIN',
-            'since_datetime': format_time(
+            "request_id": "current_interval",
+            "bucket": "MIN",
+            "since_datetime": format_time(
                 (datetime_localtime - scan_interval).replace(second=0),
             ),
-            'until_datetime': format_time(datetime_localtime.replace(second=0)),
-            'operation': CONST_OPERATION,
-            'units': CONST_UNIT_OF_MEASUREMENT,
+            "until_datetime": format_time(datetime_localtime.replace(second=0)),
+            "operation": CONST_OPERATION,
+            "units": CONST_UNIT_OF_MEASUREMENT,
         },
         {
-            'request_id': 'today',
-            'bucket': 'DAY',
-            'since_datetime': format_start_today(datetime_localtime),
-            'until_datetime': format_time(datetime_localtime),
-            'operation': CONST_OPERATION,
-            'units': CONST_UNIT_OF_MEASUREMENT,
+            "request_id": "today",
+            "bucket": "DAY",
+            "since_datetime": format_start_today(datetime_localtime),
+            "until_datetime": format_time(datetime_localtime),
+            "operation": CONST_OPERATION,
+            "units": CONST_UNIT_OF_MEASUREMENT,
         },
         {
-            'request_id': 'week_to_date',
-            'bucket': 'DAY',
-            'since_datetime': format_start_week(datetime_localtime),
-            'until_datetime': format_time(datetime_localtime),
-            'operation': CONST_OPERATION,
-            'units': CONST_UNIT_OF_MEASUREMENT,
+            "request_id": "week_to_date",
+            "bucket": "DAY",
+            "since_datetime": format_start_week(datetime_localtime),
+            "until_datetime": format_time(datetime_localtime),
+            "operation": CONST_OPERATION,
+            "units": CONST_UNIT_OF_MEASUREMENT,
         },
         {
-            'request_id': 'month_to_date',
-            'bucket': 'MON',
-            'since_datetime': format_start_month(datetime_localtime),
-            'until_datetime': format_time(datetime_localtime),
-            'units': CONST_UNIT_OF_MEASUREMENT,
+            "request_id": "month_to_date",
+            "bucket": "MON",
+            "since_datetime": format_start_month(datetime_localtime),
+            "until_datetime": format_time(datetime_localtime),
+            "units": CONST_UNIT_OF_MEASUREMENT,
         },
         {
-            'request_id': 'last_60_min',
-            'bucket': 'MIN',
-            'since_datetime': format_time(datetime_localtime - timedelta(minutes=60)),
-            'until_datetime': format_time(datetime_localtime),
-            'operation': CONST_OPERATION,
-            'units': CONST_UNIT_OF_MEASUREMENT,
+            "request_id": "last_60_min",
+            "bucket": "MIN",
+            "since_datetime": format_time(datetime_localtime - timedelta(minutes=60)),
+            "until_datetime": format_time(datetime_localtime),
+            "operation": CONST_OPERATION,
+            "units": CONST_UNIT_OF_MEASUREMENT,
         },
         {
-            'request_id': 'last_24_hrs',
-            'bucket': 'HR',
-            'since_datetime': format_time(datetime_localtime - timedelta(hours=24)),
-            'until_datetime': format_time(datetime_localtime),
-            'operation': CONST_OPERATION,
-            'units': CONST_UNIT_OF_MEASUREMENT,
+            "request_id": "last_24_hrs",
+            "bucket": "HR",
+            "since_datetime": format_time(datetime_localtime - timedelta(hours=24)),
+            "until_datetime": format_time(datetime_localtime),
+            "operation": CONST_OPERATION,
+            "units": CONST_UNIT_OF_MEASUREMENT,
         },
         {
-            'request_id': 'last_30_days',
-            'bucket': 'DAY',
-            'since_datetime': format_time(datetime_localtime - timedelta(days=30)),  # noqa: WPS432
-            'until_datetime': format_time(datetime_localtime),
-            'operation': CONST_OPERATION,
-            'units': CONST_UNIT_OF_MEASUREMENT,
+            "request_id": "last_30_days",
+            "bucket": "DAY",
+            "since_datetime": format_time(
+                datetime_localtime - timedelta(days=30)
+            ),  # noqa: WPS432
+            "until_datetime": format_time(datetime_localtime),
+            "operation": CONST_OPERATION,
+            "units": CONST_UNIT_OF_MEASUREMENT,
         },
     ]
-    return {'queries': queries}
+    return {"queries": queries}
 
 
 def _response_error(message, response):
@@ -101,14 +107,16 @@ def _response_error(message, response):
         return
 
     if response.status_code == 400:  # noqa: WPS432
-        error_message = json.loads(response.text)['detailed'][0]
+        error_message = json.loads(response.text)["detailed"][0]
     else:
-        error_message = json.loads(response.text)['message']
+        error_message = json.loads(response.text)["message"]
 
     raise Exception(
         """Message:{0}.
             Response code returned:{1}.
-            Eror message returned:{2}.""".format(message, response.status_code, error_message),
+            Eror message returned:{2}.""".format(
+            message, response.status_code, error_message
+        ),
     )
 
 
@@ -141,10 +149,10 @@ class FlumeAuth(object):  # noqa: WPS214
         """
 
         self._creds = {
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'username': username,
-            'password': password,
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "username": username,
+            "password": password,
         }
 
         if http_session is None:
@@ -175,10 +183,10 @@ class FlumeAuth(object):  # noqa: WPS214
         """Refresh authorization token for session."""
 
         payload = {
-            'grant_type': 'refresh_token',
-            'refresh_token': self._token['refresh_token'],
-            'client_id': self._creds['client_id'],
-            'client_secret': self._creds['client_secret'],
+            "grant_type": "refresh_token",
+            "refresh_token": self._token["refresh_token"],
+            "client_id": self._creds["client_id"],
+            "client_secret": self._creds["client_secret"],
         }
 
         self._load_token(self._request_token(payload))
@@ -186,7 +194,7 @@ class FlumeAuth(object):  # noqa: WPS214
     def retrieve_token(self):
         """Return authorization token for session."""
 
-        payload = dict({'grant_type': 'password'}, **self._creds)
+        payload = dict({"grant_type": "password"}, **self._creds)
         self._load_token(self._request_token(payload))
 
     def _load_token(self, token):
@@ -197,21 +205,23 @@ class FlumeAuth(object):  # noqa: WPS214
             token: Authentication bearer token to be decoded.
 
         """
-        jwt_options = {'verify_signature': False}
+        jwt_options = {"verify_signature": False}
         self._token = token
         try:
-            self._decoded_token = jwt.decode(self._token['access_token'], options=jwt_options)
+            self._decoded_token = jwt.decode(
+                self._token["access_token"], options=jwt_options
+            )
         except jwt.exceptions.DecodeError:
-            LOGGER.debug('Poorly formatted Access Token, fetching token using _creds')
+            LOGGER.debug("Poorly formatted Access Token, fetching token using _creds")
             self.retrieve_token()
         except TypeError:
-            LOGGER.debug('Token TypeError, fetching token using _creds')
+            LOGGER.debug("Token TypeError, fetching token using _creds")
             self.retrieve_token()
 
-        self.user_id = self._decoded_token['user_id']
+        self.user_id = self._decoded_token["user_id"]
 
         self.authorization_header = {
-            'authorization': 'Bearer {0}'.format(self._token.get('access_token')),
+            "authorization": "Bearer {0}".format(self._token.get("access_token")),
         }
 
     def _request_token(self, payload):
@@ -227,29 +237,31 @@ class FlumeAuth(object):  # noqa: WPS214
 
         """
 
-        headers = {'content-type': 'application/json'}
+        headers = {"content-type": "application/json"}
         response = self._http_session.request(
-            'POST',
+            "POST",
             URL_OAUTH_TOKEN,
             json=payload,
             headers=headers,
             timeout=self._timeout,
         )
 
-        LOGGER.debug('Token Payload: %s', payload)  # noqa: WPS323
-        LOGGER.debug('Token Response: %s', response.text)  # noqa: WPS323
+        LOGGER.debug("Token Payload: %s", payload)  # noqa: WPS323
+        LOGGER.debug("Token Response: %s", response.text)  # noqa: WPS323
 
         # Check for response errors.
-        _response_error("Can't get token for user {0}".format(self._creds.get('username')), response)
+        _response_error(
+            "Can't get token for user {0}".format(self._creds.get("username")), response
+        )
 
-        return json.loads(response.text)['data'][0]
+        return json.loads(response.text)["data"][0]
 
     def _verify_token(self):
         """Check to see if token is expiring in 12 hours."""
-        token_expiration = datetime.fromtimestamp(self._decoded_token['exp'])
+        token_expiration = datetime.fromtimestamp(self._decoded_token["exp"])
         time_difference = datetime.now() + timedelta(hours=12)  # noqa: WPS432
-        LOGGER.debug('Token expiration time: %s', token_expiration)  # noqa: WPS323
-        LOGGER.debug('Token comparison time: %s', time_difference)  # noqa: WPS323
+        LOGGER.debug("Token expiration time: %s", token_expiration)  # noqa: WPS323
+        LOGGER.debug("Token comparison time: %s", time_difference)  # noqa: WPS323
 
         if token_expiration <= time_difference:
             self.refresh_token()
@@ -294,22 +306,22 @@ class FlumeDeviceList(object):
         """
 
         url = API_DEVICES_URL.format(user_id=self._flume_auth.user_id)
-        query_string = {'user': 'true', 'location': 'true'}
+        query_string = {"user": "true", "location": "true"}
 
         response = self._http_session.request(
-            'GET',
+            "GET",
             url,
             headers=self._flume_auth.authorization_header,
             params=query_string,
             timeout=self._timeout,
         )
 
-        LOGGER.debug('get_devices Response: %s', response.text)  # noqa: WPS323
+        LOGGER.debug("get_devices Response: %s", response.text)  # noqa: WPS323
 
         # Check for response errors.
-        _response_error('Impossible to retreive devices', response)
+        _response_error("Impossible to retreive devices", response)
 
-        return response.json()['data']
+        return response.json()["data"]
 
 
 class FlumeNotificationList(object):
@@ -320,7 +332,7 @@ class FlumeNotificationList(object):
         flume_auth,
         http_session=None,
         timeout=DEFAULT_TIMEOUT,
-        read='false',
+        read="false",
     ):
         """
 
@@ -356,25 +368,88 @@ class FlumeNotificationList(object):
         url = API_NOTIFICATIONS_URL.format(user_id=self._flume_auth.user_id)
 
         query_string = {
-            'limit': '50',
-            'offset': '0',
-            'sort_direction': 'ASC',
-            'read': self._read,
+            "limit": "50",
+            "offset": "0",
+            "sort_direction": "ASC",
+            "read": self._read,
         }
 
         response = self._http_session.request(
-            'GET',
+            "GET",
             url,
             headers=self._flume_auth.authorization_header,
             params=query_string,
             timeout=self._timeout,
         )
 
-        LOGGER.debug('get_notifications Response: %s', response.text)  # noqa: WPS323
+        LOGGER.debug("get_notifications Response: %s", response.text)  # noqa: WPS323
 
         # Check for response errors.
-        _response_error('Impossible to retrieve notifications', response)
-        return response.json()['data']
+        _response_error("Impossible to retrieve notifications", response)
+        return response.json()["data"]
+
+
+class FlumeUsageAlertList(object):
+    """Get Flume Notifications list from API."""
+
+    def __init__(
+        self,
+        flume_auth,
+        http_session=None,
+        timeout=DEFAULT_TIMEOUT,
+        read="false",
+    ):
+        """
+
+        Initialize the data object.
+
+        Args:
+            flume_auth: Authentication object.
+            http_session: Requests Session()
+            timeout: Requests timeout for throttling.
+            read: state of notification list, have they been read, not read.
+
+        """
+        self._timeout = timeout
+        self._flume_auth = flume_auth
+        self._read = read
+
+        if http_session is None:
+            self._http_session = Session()
+        else:
+            self._http_session = http_session
+
+        self.usage_alert_list = self.get_usage_alerts()
+
+    def get_usage_alerts(self):
+        """Return all usage alerts from devices owned by teh user.
+
+        Returns:
+            Returns JSON list of notifications.
+        """
+
+        url = API_USAGE_URL.format(user_id=self._flume_auth.user_id)
+
+        query_string = {
+            "limit": "50",
+            "offset": "0",
+            "sort_direction": "ASC",
+            "read": self._read,
+        }
+
+        response = self._http_session.request(
+            "GET",
+            url,
+            headers=self._flume_auth.authorization_header,
+            params=query_string,
+            timeout=self._timeout,
+        )
+
+        LOGGER.debug("get_usage_alerts Response: %s", response.text)  # noqa: WPS323
+
+        # Check for response errors.
+        _response_error("Impossible to retrieve notifications", response)
+        return response.json()["data"]
 
 
 class FlumeData(object):
@@ -414,13 +489,16 @@ class FlumeData(object):
         self.values = {}  # noqa: WPS110
         if query_payload is None:
             self.query_payload = _generate_api_query_payload(
-                self._scan_interval, device_tz,
+                self._scan_interval,
+                device_tz,
             )
         if http_session is None:
             self._http_session = Session()
         else:
             self._http_session = http_session
-        self._query_keys = [query['request_id'] for query in self.query_payload['queries']]
+        self._query_keys = [
+            query["request_id"] for query in self.query_payload["queries"]
+        ]
         if update_on_init:
             self.update()
 
@@ -439,11 +517,13 @@ class FlumeData(object):
     def update_force(self):
         """Return updated value for session without auto retry or limits."""
         self.query_payload = _generate_api_query_payload(
-            self._scan_interval, self.device_tz,
+            self._scan_interval,
+            self.device_tz,
         )
 
         url = API_QUERY_URL.format(
-            user_id=self._flume_auth.user_id, device_id=self.device_id,
+            user_id=self._flume_auth.user_id,
+            device_id=self.device_id,
         )
         response = self._http_session.post(
             url,
@@ -452,18 +532,21 @@ class FlumeData(object):
             timeout=self._timeout,
         )
 
-        LOGGER.debug('Update URL: %s', url)  # noqa: WPS323
-        LOGGER.debug('Update query_payload: %s', self.query_payload)  # noqa: WPS323
-        LOGGER.debug('Update Response: %s', response.text)  # noqa: WPS323
+        LOGGER.debug("Update URL: %s", url)  # noqa: WPS323
+        LOGGER.debug("Update query_payload: %s", self.query_payload)  # noqa: WPS323
+        LOGGER.debug("Update Response: %s", response.text)  # noqa: WPS323
 
         # Check for response errors.
         _response_error(
-            "Can't update flume data for user id {0}".format(self._flume_auth.user_id), response,
+            "Can't update flume data for user id {0}".format(self._flume_auth.user_id),
+            response,
         )
 
-        responses = response.json()['data'][0]
+        responses = response.json()["data"][0]
 
         self.values = {  # noqa: WPS110
-            k: responses[k][0]['value'] if len(responses[k]) == 1 else None  # noqa: WPS221,WPS111
+            k: responses[k][0]["value"]
+            if len(responses[k]) == 1
+            else None  # noqa: WPS221,WPS111
             for k in self._query_keys  # noqa: WPS111
         }
