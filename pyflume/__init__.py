@@ -99,6 +99,7 @@ def _generate_api_query_payload(scan_interval, device_tz):
     ]
     return {'queries': queries}
 
+
 class FlumeResponseError(Exception):
     """Exception raised for errors in the Flume response.
 
