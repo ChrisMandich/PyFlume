@@ -99,17 +99,25 @@ def _generate_api_query_payload(scan_interval, device_tz):
     ]
     return {'queries': queries}
 
+# Define a custom exception class for handling Flume response errors
+class FlumeResponseError(Exception):
+    pass
 
+# Define a function to handle response errors from the Flume API
 def _response_error(message, response):
+    # If the response code is 200 (OK), no error has occurred, so return immediately
     if response.status_code == 200:  # noqa: WPS432
         return
 
+    # If the response code is 400 (Bad Request), retrieve the detailed error message
     if response.status_code == 400:  # noqa: WPS432
         error_message = json.loads(response.text)['detailed'][0]
     else:
+        # For other error codes, retrieve the general error message
         error_message = json.loads(response.text)['message']
 
-    raise Exception(
+    # Raise a custom exception with a formatted message containing the error details
+    raise FlumeResponseError(
         'Message:{0}.\nResponse code returned:{1}.\nError message returned:{2}.'.format(message, response.status_code, error_message),
     )
 
