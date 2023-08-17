@@ -7,5 +7,6 @@ PyFlume.egg-info
 .idea/*
 .vscode
 .vscode/*
+.tox
 .tox/*
 *pyc

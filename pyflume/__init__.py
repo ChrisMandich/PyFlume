@@ -1,22 +1,24 @@
-"""Package to interact with Flume Sensor."""
-
+"""Authenticates to Flume API, returns a list of devices and allows you to pull the latest sensor results over a period of time."""
 from datetime import datetime, timedelta, timezone
 import json
 import logging
-try:
-    from zoneinfo import ZoneInfo
-except ImportError: # Python < 3.9
-    from backports.zoneinfo import ZoneInfo
 
-import jwt  # pip install pyjwt
+import jwt  # install pyjwt
+
+try:
+    from zoneinfo import ZoneInfo  # noqa: WPS433
+except ImportError:  # Python < 3.9
+    from backports.zoneinfo import ZoneInfo  # noqa: WPS433,WPS440
+
+from ratelimit import limits, sleep_and_retry
+from requests import Session
+
 from pyflume.format_time import (
     format_start_month,
     format_start_today,
     format_start_week,
     format_time,
 )
-from ratelimit import limits, sleep_and_retry
-from requests import Session
 
 API_LIMIT = 60
 
@@ -99,19 +101,39 @@ def _generate_api_query_payload(scan_interval, device_tz):
     return {'queries': queries}
 
 
+class FlumeResponseError(Exception):
+    """
+    Exception raised for errors in the Flume response.
+
+    Attributes:
+        message -- explanation of the error
+    """
+
+
 def _response_error(message, response):
+    """Define a function to handle response errors from the Flume API.
+
+    Args:
+        message (string): Message received as error
+        response (string): Response received as error
+
+    Raises:
+        FlumeResponseError: Exception raised when the status code is not 200.
+    """
+    # If the response code is 200 (OK), no error has occurred, so return immediately
     if response.status_code == 200:  # noqa: WPS432
         return
 
+    # If the response code is 400 (Bad Request), retrieve the detailed error message
     if response.status_code == 400:  # noqa: WPS432
         error_message = json.loads(response.text)['detailed'][0]
     else:
+        # For other error codes, retrieve the general error message
         error_message = json.loads(response.text)['message']
 
-    raise Exception(
-        """Message:{0}.
-            Response code returned:{1}.
-            Eror message returned:{2}.""".format(message, response.status_code, error_message),
+    # Raise a custom exception with a formatted message containing the error details
+    raise FlumeResponseError(
+        'Message:{0}.\nResponse code returned:{1}.\nError message returned:{2}.'.format(message, response.status_code, error_message),
     )
 
 
@@ -164,7 +186,8 @@ class FlumeAuth(object):  # noqa: WPS214
         self._load_token(flume_token)
         self._verify_token()
 
-    def get_token(self):
+    @property
+    def token(self):
         """
             Return authorization token for session.
 
@@ -419,7 +442,7 @@ class FlumeData(object):
             self.query_payload = _generate_api_query_payload(
                 self._scan_interval, device_tz,
             )
-        else: 
+        else:
             self.query_payload = query_payload
         if http_session is None:
             self._http_session = Session()
