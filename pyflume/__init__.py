@@ -1,5 +1,3 @@
-"""Package to interact with Flume Sensor."""
-
 from datetime import datetime, timedelta, timezone
 import json
 import logging
