@@ -6,7 +6,7 @@ import logging
 try:
     from zoneinfo import ZoneInfo  # noqa: WPS433
 except ImportError:  # Python < 3.9
-    from backports.zoneinfo import ZoneInfo  # noqa: WPS433
+    from backports.zoneinfo import ZoneInfo  # noqa: WPS433,WPS440
 
 import jwt  # pip install pyjwt
 from pyflume.format_time import (
