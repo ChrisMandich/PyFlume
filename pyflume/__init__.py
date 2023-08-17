@@ -165,7 +165,8 @@ class FlumeAuth(object):  # noqa: WPS214
         self._load_token(flume_token)
         self._verify_token()
 
-    def get_token(self):
+    @property
+    def token(self):
         """
             Return authorization token for session.
 
