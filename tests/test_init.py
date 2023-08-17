@@ -13,7 +13,6 @@ import requests_mock
 # Local application/library-specific imports
 import pyflume
 
-
 CONST_TOKEN_FILE = 'token.json'  # noqa: S105
 CONST_HTTP_METHOD_POST = 'post'
 CONST_USERNAME = 'username'  # noqa: S105
