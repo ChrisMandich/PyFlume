@@ -12,12 +12,6 @@ import requests_mock
 
 # Local application/library-specific imports
 import pyflume
-from pyflume import (
-    API_DEVICES_URL,
-    API_NOTIFICATIONS_URL,
-    API_QUERY_URL,
-    URL_OAUTH_TOKEN,
-)
 
 
 CONST_TOKEN_FILE = 'token.json'  # noqa: S105
@@ -68,7 +62,7 @@ class TestFlumeAuth(unittest.TestCase):
             mock: Requests mock.
 
         """
-        mock.register_uri(CONST_HTTP_METHOD_POST, URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
+        mock.register_uri(CONST_HTTP_METHOD_POST, pyflume.URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
         auth = pyflume.FlumeAuth(
             CONST_USERNAME, CONST_PASSWORD, CONST_CLIENT_ID, CONST_CLIENT_SECRET, CONST_FLUME_TOKEN, http_session=Session(),
         )
@@ -88,10 +82,10 @@ class TestFlumeDeviceList(unittest.TestCase):
             mock: Requests mock.
 
         """
-        mock.register_uri(CONST_HTTP_METHOD_POST, URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
+        mock.register_uri(CONST_HTTP_METHOD_POST, pyflume.URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
         mock.register_uri(
             'get',
-            API_DEVICES_URL.format(user_id=CONST_USER_ID),
+            pyflume.API_DEVICES_URL.format(user_id=CONST_USER_ID),
             text=load_fixture('devices.json'),
         )
         flume_auth = pyflume.FlumeAuth(
@@ -117,10 +111,10 @@ class TestFlumeNotificationList(unittest.TestCase):
             mock: Requests mock.
 
         """
-        mock.register_uri(CONST_HTTP_METHOD_POST, URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
+        mock.register_uri(CONST_HTTP_METHOD_POST, pyflume.URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
         mock.register_uri(
             'get',
-            API_NOTIFICATIONS_URL.format(user_id=CONST_USER_ID),
+            pyflume.API_NOTIFICATIONS_URL.format(user_id=CONST_USER_ID),
             text=load_fixture('notification.json'),
         )
         flume_auth = pyflume.FlumeAuth(
@@ -146,10 +140,10 @@ class TestFlumeData(unittest.TestCase):
             mock: Requests mock.
 
         """
-        mock.register_uri(CONST_HTTP_METHOD_POST, URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
+        mock.register_uri(CONST_HTTP_METHOD_POST, pyflume.URL_OAUTH_TOKEN, text=load_fixture(CONST_TOKEN_FILE))
         mock.register_uri(
             CONST_HTTP_METHOD_POST,
-            API_QUERY_URL.format(user_id=CONST_USER_ID, device_id='device_id'),
+            pyflume.API_QUERY_URL.format(user_id=CONST_USER_ID, device_id='device_id'),
             text=load_fixture('query.json'),
         )
 
