@@ -107,6 +107,7 @@ class FlumeResponseError(Exception):
     Attributes:
         message -- explanation of the error
     """
+
     pass
 
 # Define a function to handle response errors from the Flume API
