@@ -1,9 +1,14 @@
-"""Basic tests for flume."""
+# Standard library imports
 from datetime import timedelta
 import os
 from types import MappingProxyType
 import unittest
 
+# Third-party imports
+from requests import Session
+import requests_mock
+
+# Local application/library-specific imports
 import pyflume
 from pyflume import (
     API_DEVICES_URL,
@@ -11,8 +16,7 @@ from pyflume import (
     API_QUERY_URL,
     URL_OAUTH_TOKEN,
 )
-from requests import Session
-import requests_mock
+
 
 CONST_TOKEN_FILE = 'token.json'  # noqa: S105
 CONST_HTTP_METHOD_POST = 'post'
