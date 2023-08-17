@@ -110,7 +110,7 @@ class FlumeResponseError(Exception):
 
 
 def _response_error(message, response):
-    """Define a function to handle response errors from the Flume API
+    """Define a function to handle response errors from the Flume API.
 
     Args:
         message (string): Message received as error
