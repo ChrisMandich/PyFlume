@@ -20,7 +20,6 @@ from pyflume.format_time import (
     format_time,
 )
 
-
 API_LIMIT = 60
 
 CONST_OPERATION = 'SUM'
