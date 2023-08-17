@@ -1,3 +1,5 @@
+"""Basic tests for flume. This module contains unittest classes for testing different functionalities of flume."""
+
 # Standard library imports
 from datetime import timedelta
 import os
