@@ -416,6 +416,8 @@ class FlumeData(object):
             self.query_payload = _generate_api_query_payload(
                 self._scan_interval, device_tz,
             )
+        else: 
+            self.query_payload = query_payload
         if http_session is None:
             self._http_session = Session()
         else:
