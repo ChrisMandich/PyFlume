@@ -5,7 +5,7 @@ import json
 import logging
 try:
     from zoneinfo import ZoneInfo  # noqa: WPS433
-except ImportError: # Python < 3.9
+except ImportError:  # Python < 3.9
     from backports.zoneinfo import ZoneInfo
 
 import jwt  # pip install pyjwt
@@ -419,7 +419,7 @@ class FlumeData(object):
             self.query_payload = _generate_api_query_payload(
                 self._scan_interval, device_tz,
             )
-        else: 
+        else:
             self.query_payload = query_payload
         if http_session is None:
             self._http_session = Session()
