@@ -19,7 +19,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: wemake-python-styleguide
-      uses: wemake-services/wemake-python-styleguide@1.5.1
+      uses: wemake-services/wemake-python-styleguide
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
