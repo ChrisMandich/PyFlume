@@ -2,12 +2,17 @@
 
 from datetime import datetime, timedelta, timezone
 import json
-import jwt  # install pyjwt
 import logging
+
+import jwt  # install pyjwt
+
 try:
     from zoneinfo import ZoneInfo  # noqa: WPS433
 except ImportError:  # Python < 3.9
     from backports.zoneinfo import ZoneInfo  # noqa: WPS433,WPS440
+
+from ratelimit import limits, sleep_and_retry
+from requests import Session
 
 from pyflume.format_time import (
     format_start_month,
@@ -15,8 +20,6 @@ from pyflume.format_time import (
     format_start_week,
     format_time,
 )
-from ratelimit import limits, sleep_and_retry
-from requests import Session
 
 API_LIMIT = 60
 
