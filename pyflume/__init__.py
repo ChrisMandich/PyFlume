@@ -108,8 +108,6 @@ class FlumeResponseError(Exception):
         message -- explanation of the error
     """
 
-    pass
-
 # Define a function to handle response errors from the Flume API
 def _response_error(message, response):
     # If the response code is 200 (OK), no error has occurred, so return immediately
