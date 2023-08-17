@@ -1,14 +1,12 @@
 """Package to interact with Flume Sensor."""
 
 from datetime import datetime, timedelta, timezone
-import json
-import logging
+import json, jwt, logging  # install pyjwt
 try:
     from zoneinfo import ZoneInfo  # noqa: WPS433
 except ImportError:  # Python < 3.9
     from backports.zoneinfo import ZoneInfo  # noqa: WPS433,WPS440
 
-import jwt  # pip install pyjwt
 from pyflume.format_time import (
     format_start_month,
     format_start_today,
