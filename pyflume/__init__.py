@@ -108,8 +108,17 @@ class FlumeResponseError(Exception):
         message -- explanation of the error
     """
 
-# Define a function to handle response errors from the Flume API
+
 def _response_error(message, response):
+    """Define a function to handle response errors from the Flume API
+
+    Args:
+        message (string): Message received as error
+        response (string): Response received as error
+
+    Raises:
+        FlumeResponseError: Exception raised when the status code is not 200.
+    """
     # If the response code is 200 (OK), no error has occurred, so return immediately
     if response.status_code == 200:  # noqa: WPS432
         return
