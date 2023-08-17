@@ -1,3 +1,4 @@
+"""Authenticates to Flume API, returns a list of devices and allows you to pull the latest sensor results over a period of time."""
 from datetime import datetime, timedelta, timezone
 import json
 import logging
@@ -18,6 +19,7 @@ from pyflume.format_time import (
     format_start_week,
     format_time,
 )
+
 
 API_LIMIT = 60
 
