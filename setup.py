@@ -22,7 +22,7 @@ setuptools.setup(
     install_requires=[
         'pyjwt',
         'ratelimit',
-        'pytz',
         'requests',
+        'backports.zoneinfo; python_version<"3.9"',
     ],
 )

@@ -1,8 +1,12 @@
 """Package to interact with Flume Sensor."""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import json
 import logging
+try:
+    from zoneinfo import ZoneInfo
+except ImportError: # Python < 3.9
+    from backports.zoneinfo import ZoneInfo
 
 import jwt  # pip install pyjwt
 from pyflume.format_time import (
@@ -11,7 +15,6 @@ from pyflume.format_time import (
     format_start_week,
     format_time,
 )
-from pytz import timezone, utc
 from ratelimit import limits, sleep_and_retry
 from requests import Session
 
@@ -32,7 +35,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def _generate_api_query_payload(scan_interval, device_tz):
-    datetime_localtime = utc.localize(datetime.utcnow()).astimezone(timezone(device_tz))
+    datetime_localtime = datetime.now(timezone.utc).astimezone(ZoneInfo(device_tz))
 
     queries = [
         {
