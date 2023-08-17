@@ -112,7 +112,7 @@ def _response_error(message, response):
         error_message = json.loads(response.text)['message']
 
     raise Exception(
-        "Message:{0}.\nResponse code returned:{1}.\nError message returned:{2}.".format(message, response.status_code, error_message),
+        'Message:{0}.\nResponse code returned:{1}.\nError message returned:{2}.'.format(message, response.status_code, error_message),
     )
 
 
