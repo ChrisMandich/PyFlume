@@ -99,8 +99,12 @@ def _generate_api_query_payload(scan_interval, device_tz):
     ]
     return {'queries': queries}
 
-# Define a custom exception class for handling Flume response errors
 class FlumeResponseError(Exception):
+    """Exception raised for errors in the Flume response.
+
+    Attributes:
+        message -- explanation of the error
+    """
     pass
 
 # Define a function to handle response errors from the Flume API
