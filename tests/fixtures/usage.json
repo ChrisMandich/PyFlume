@@ -1,0 +1,715 @@
+{
+    "success": true,
+    "code": 602,
+    "message": "Request OK",
+    "http_code": 200,
+    "http_message": "OK",
+    "detailed": null,
+    "data": [
+        {
+            "id": 5243137,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-22T12:41:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-22 05:42:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-22 05:27:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5255122,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-23T11:14:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-23 04:15:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-23 04:00:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5257651,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-23T13:30:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-23 06:31:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-23 06:16:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5270444,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-24T12:41:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-24 05:42:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-24 05:27:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5274373,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-24T18:17:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-24 11:18:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-24 11:03:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5283712,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-25T12:40:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-25 05:41:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-25 05:26:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5296972,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-26T13:09:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-26 06:10:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-26 05:55:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5310367,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-27T12:41:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-27 05:42:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-27 05:27:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5323808,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-28T13:07:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-28 06:08:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-28 05:53:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5351044,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-06-29T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-06-29 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-06-29 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5359491,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-01T11:14:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-01 04:15:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-01 04:00:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5361864,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-01T13:29:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-01 06:30:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-01 06:15:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5373614,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-02T12:43:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-02 05:44:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-02 05:29:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5384498,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-03T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-03 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-03 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5411226,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-05T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-05 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-05 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5413585,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-05T13:24:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-05 06:25:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-05 06:10:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5426430,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-06T12:45:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-06 05:46:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-06 05:31:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5437976,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-07T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-07 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-07 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5440080,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-07T13:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-07 06:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-07 05:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5453334,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-08T12:46:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-08 05:47:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-08 05:32:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5465242,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-09T11:14:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-09 04:15:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-09 04:00:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5467031,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-09T13:14:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-09 06:15:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-09 06:00:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5480078,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-10T13:11:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-10 06:12:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-10 05:57:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5492257,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-11T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-11 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-11 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5494981,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-11T13:22:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-11 06:23:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-11 06:08:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5521358,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-13T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-13 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-13 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5537687,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-14T12:49:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-14 05:50:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-14 05:35:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5549658,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-15T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-15 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-15 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5551885,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-15T13:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-15 06:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-15 05:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5564244,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-16T12:50:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-16 05:51:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-16 05:36:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5575597,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-17T11:12:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-17 04:13:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-17 03:58:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5591234,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-18T12:51:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-18 05:52:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-18 05:37:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5603583,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-19T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-19 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-19 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5606381,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-19T13:29:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-19 06:30:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-19 06:15:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5620785,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-20T12:52:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-20 05:53:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-20 05:38:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5634037,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-21T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-21 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-21 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5636547,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-21T13:20:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-21 06:21:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-21 06:06:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5651243,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-22T12:54:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-22 05:55:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-22 05:40:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5663989,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-23T11:12:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-23 04:13:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-23 03:58:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5679244,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-24T12:54:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-24 05:55:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-24 05:40:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5691434,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-25T11:13:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-25 04:14:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-25 03:59:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5720925,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-27T11:12:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-27 04:13:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-27 03:58:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5723700,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-27T13:27:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-27 06:28:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-27 06:13:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5737526,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-28T12:58:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-28 05:59:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-28 05:44:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5749779,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-29T11:12:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-29 04:13:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-29 03:58:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5752512,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-29T13:27:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-29 06:28:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-29 06:13:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5765668,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-30T12:59:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-30 06:00:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-30 05:45:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5777345,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-31T11:12:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-31 04:13:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-31 03:58:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5779249,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-07-31T13:18:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-07-31 06:19:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-07-31 06:04:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        },
+        {
+            "id": 5793493,
+            "device_id": "6248148189204194987",
+            "triggered_datetime": "2022-08-01T13:00:00.000Z",
+            "flume_leak": false,
+            "query": {
+                "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+                "until_datetime": "2022-08-01 06:01:00",
+                "tz": "America/Los_Angeles",
+                "bucket": "MIN",
+                "since_datetime": "2022-08-01 05:46:00"
+            },
+            "event_rule_name": "High Flow Alert"
+        }
+    ],
+    "count": 122,
+    "pagination": {
+        "next": "/users/1111/usage-alerts?offset=50&limit=50",
+        "prev": null
+    }
+}

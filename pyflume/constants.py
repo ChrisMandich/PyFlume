@@ -15,7 +15,7 @@ URL_OAUTH_TOKEN = f"{API_BASE_URL}/oauth/token"
 API_QUERY_URL = f"{API_BASE_URL}/users/{{user_id}}/devices/{{device_id}}/query"
 API_DEVICES_URL = f"{API_BASE_URL}/users/{{user_id}}/devices"
 API_NOTIFICATIONS_URL = f"{API_BASE_URL}/users/{{user_id}}/notifications"
-API_NOTIFICATIONS_LEAK_URL = (
+API_LEAK_URL = (
     f"{API_BASE_URL}/users/{{user_id}}/devices/{{device_id}}/leaks/active"
 )
 API_USAGE_URL = f"{API_BASE_URL}/users/{{user_id}}/usage-alerts"
