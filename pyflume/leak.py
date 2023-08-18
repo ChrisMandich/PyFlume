@@ -1,4 +1,4 @@
-"""Retrieve notifications from Flume API."""
+"""Retrieve leak notifications from Flume API."""
 from requests import Session
 
 from .constants import API_LEAK_URL, DEFAULT_TIMEOUT  # noqa: WPS300
@@ -28,7 +28,7 @@ class FlumeLeakList(object):
             device_id: The Device ID to query.
             http_session: Requests Session()
             timeout: Requests timeout for throttling.
-            read: state of notification list, have they been read, not read.
+            read: state of leak notification list, have they been read, not read.
 
         """
         self._timeout = timeout
@@ -47,7 +47,7 @@ class FlumeLeakList(object):
         """Return all leak alerts from devices owned by the user.
 
         Returns:
-            Returns JSON list of notifications.
+            Returns JSON list of leak notifications.
         """
 
         url = API_LEAK_URL.format(

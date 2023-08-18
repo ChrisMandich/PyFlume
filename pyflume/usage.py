@@ -1,4 +1,4 @@
-"""Retrieve notifications from Flume API."""
+"""Retrieve usage alert notifications from Flume API."""
 from requests import Session
 
 from .constants import API_USAGE_URL, DEFAULT_TIMEOUT  # noqa: WPS300
@@ -9,7 +9,7 @@ LOGGER = configure_logger(__name__)
 
 
 class FlumeUsageAlertList(object):
-    """Get Flume Notifications list from API."""
+    """Get Flume Usage Alert list from API."""
 
     def __init__(
         self,
@@ -26,7 +26,7 @@ class FlumeUsageAlertList(object):
             flume_auth: Authentication object.
             http_session: Requests Session()
             timeout: Requests timeout for throttling.
-            read: state of notification list, have they been read, not read.
+            read: state of usage alert list, have they been read, not read.
 
         """
         self._timeout = timeout
@@ -44,7 +44,7 @@ class FlumeUsageAlertList(object):
         """Return all usage alerts from devices owned by teh user.
 
         Returns:
-            Returns JSON list of notifications.
+            Returns JSON list of usage alerts.
         """
 
         url = API_USAGE_URL.format(user_id=self._flume_auth.user_id)
@@ -67,5 +67,5 @@ class FlumeUsageAlertList(object):
         LOGGER.debug(f"get_usage_alerts Response: {response.text}")
 
         # Check for response errors.
-        flume_response_error("Impossible to retrieve notifications", response)
+        flume_response_error("Impossible to retrieve usage alert", response)
         return response.json()["data"]
