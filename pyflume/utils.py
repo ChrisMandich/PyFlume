@@ -25,7 +25,7 @@ def configure_logger(name):
 
     logger_handler = logging.StreamHandler()
     formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        "{asctime} - {name} - {levelname} - {message}", style='{'
     )
     logger_handler.setFormatter(formatter)
 
