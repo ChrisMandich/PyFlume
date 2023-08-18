@@ -245,7 +245,7 @@ class TestFlumeData(unittest.TestCase):
         mock.register_uri(
             CONST_HTTP_METHOD_POST,
             pyflume.constants.API_QUERY_URL.format(
-                user_id=CONST_USER_ID, device_id="device_id"
+                user_id=CONST_USER_ID, device_id="device_id",
             ),
             text=load_fixture("query.json"),
         )
