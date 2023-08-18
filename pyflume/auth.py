@@ -102,7 +102,7 @@ class FlumeAuth(object):  # noqa: WPS214
         self._token = token
         try:
             self._decoded_token = jwt.decode(
-                self._token["access_token"], options=jwt_options
+                self._token["access_token"], options=jwt_options,
             )
         except jwt.exceptions.DecodeError:
             LOGGER.debug("Poorly formatted Access Token, fetching token using _creds")
