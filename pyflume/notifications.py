@@ -1,5 +1,6 @@
 """Retrieve notifications from Flume API."""
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
+
 from requests import Session
 
 from .constants import API_NOTIFICATIONS_URL, DEFAULT_TIMEOUT  # noqa: WPS300
