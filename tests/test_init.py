@@ -208,7 +208,8 @@ class TestFlumeLeakList(unittest.TestCase):
         mock.register_uri(
             "get",
             pyflume.constants.API_LEAK_URL.format(
-                user_id=CONST_USER_ID, device_id="6248148189204194987"
+                user_id=CONST_USER_ID,
+                device_id="6248148189204194987",
             ),
             text=load_fixture("leak.json"),
         )
