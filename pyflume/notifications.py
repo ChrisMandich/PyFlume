@@ -59,7 +59,7 @@ class FlumeNotificationList(object):
             timeout=self._timeout,
         )
 
-        LOGGER.debug("get_notifications Response: %s", response.text)
+        LOGGER.debug("get_notifications Response: {}".format(response.text))
 
         # Check for response errors.
         flume_response_error("Impossible to retrieve notifications", response)
