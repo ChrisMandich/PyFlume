@@ -1,3 +1,4 @@
+"""Constants to support PyFlume."""
 # Time-related constants
 API_LIMIT = 60
 DEFAULT_TIMEOUT = 30

@@ -1,4 +1,4 @@
-"""Support for Flume notification list."""
+"""Retrieve notifications from Flume API."""
 from typing import Optional, Dict, Any
 from requests import Session
 

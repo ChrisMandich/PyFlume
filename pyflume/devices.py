@@ -1,4 +1,4 @@
-"""Authenticates to Flume API."""
+"""Retrieve Devices from Flume API."""
 from requests import Session
 
 from .constants import API_DEVICES_URL, DEFAULT_TIMEOUT  # noqa: WPS300

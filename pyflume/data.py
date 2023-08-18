@@ -1,4 +1,4 @@
-"""Authenticates to Flume API."""
+"""Retrieve data from Flume API."""
 from ratelimit import limits, sleep_and_retry
 from requests import Session
 
