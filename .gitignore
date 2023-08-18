@@ -10,3 +10,4 @@ PyFlume.egg-info
 .tox
 .tox/*
 *pyc
+__pycache__
