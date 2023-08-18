@@ -5,8 +5,8 @@ import json
 import jwt  # install pyjwt
 from requests import Session
 
-from .constants import DEFAULT_TIMEOUT, URL_OAUTH_TOKEN
-from .utils import configure_logger, flume_response_error
+from .constants import DEFAULT_TIMEOUT, URL_OAUTH_TOKEN  # noqa: WPS300
+from .utils import configure_logger, flume_response_error  # noqa: WPS300
 
 # Configure logging
 LOGGER = configure_logger(__name__)

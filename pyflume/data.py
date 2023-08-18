@@ -2,8 +2,8 @@
 from ratelimit import limits, sleep_and_retry
 from requests import Session
 
-from .constants import API_LIMIT, API_QUERY_URL, DEFAULT_TIMEOUT
-from .utils import configure_logger, flume_response_error, generate_api_query_payload
+from .constants import API_LIMIT, API_QUERY_URL, DEFAULT_TIMEOUT  # noqa: WPS300
+from .utils import configure_logger, flume_response_error, generate_api_query_payload  # noqa: WPS300
 
 # Configure logging
 LOGGER = configure_logger(__name__)

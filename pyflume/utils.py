@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 import json
 import logging
 
-from .constants import CONST_OPERATION, CONST_UNIT_OF_MEASUREMENT
+from .constants import CONST_OPERATION, CONST_UNIT_OF_MEASUREMENT  # noqa: WPS300
 
 try:
     from zoneinfo import ZoneInfo  # noqa: WPS433

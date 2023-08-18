@@ -1,8 +1,8 @@
 """Authenticates to Flume API."""
 from requests import Session
 
-from .constants import API_DEVICES_URL, DEFAULT_TIMEOUT
-from .utils import configure_logger, flume_response_error
+from .constants import API_DEVICES_URL, DEFAULT_TIMEOUT  # noqa: WPS300
+from .utils import configure_logger, flume_response_error  # noqa: WPS300
 
 # Configure logging
 LOGGER = configure_logger(__name__)
