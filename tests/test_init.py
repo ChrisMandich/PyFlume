@@ -183,8 +183,8 @@ class TestFlumeUsageAlerts(unittest.TestCase):
         flume_alerts = pyflume.FlumeUsageAlertList(flume_auth)
         alerts = flume_alerts.get_usage_alerts()
         assert len(alerts) == 50  # noqa: S101, WPS432
-        assert alerts[0]["device_id"] == "6248148189204194987"
-        assert alerts[0]["event_rule_name"] == "High Flow Alert"
+        assert alerts[0]["device_id"] == "6248148189204194987"  # noqa: S101
+        assert alerts[0]["event_rule_name"] == "High Flow Alert"  # noqa: S101
 
 
 class TestFlumeLeakList(unittest.TestCase):
@@ -223,7 +223,7 @@ class TestFlumeLeakList(unittest.TestCase):
         flume_leaks = pyflume.FlumeLeakList(flume_auth, "6248148189204194987")
         alerts = flume_leaks.get_leak_alerts()
         assert len(alerts) == 1  # noqa: S101
-        assert alerts[0]["active"]
+        assert alerts[0]["active"]  # noqa: S101
 
 
 class TestFlumeData(unittest.TestCase):
