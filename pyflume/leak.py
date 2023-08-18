@@ -51,7 +51,8 @@ class FlumeLeakList(object):
         """
 
         url = API_LEAK_URL.format(
-            user_id=self._flume_auth.user_id, device_id=self.device_id
+            user_id=self._flume_auth.user_id,
+            device_id=self.device_id,
         )
 
         query_string = {
