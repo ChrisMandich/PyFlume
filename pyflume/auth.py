@@ -41,10 +41,10 @@ class FlumeAuth(object):  # noqa: WPS214
         """
 
         self._creds = {
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'username': username,
-            'password': password,
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "username": username,
+            "password": password,
         }
 
         if http_session is None:
