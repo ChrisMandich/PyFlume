@@ -144,7 +144,7 @@ class FlumeAuth(object):  # noqa: WPS214
 
         # Check for response errors.
         flume_response_error(
-            "Can't get token for user {0}".format(self._creds.get("username")), response
+            "Can't get token for user {0}".format(self._creds.get("username")), response,
         )
 
         return json.loads(response.text)["data"][0]
