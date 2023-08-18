@@ -11,7 +11,7 @@ LOGGER = configure_logger(__name__)
 class FlumeLeakList(object):
     """Get Flume Flume Leak Notifications from API."""
 
-    def __init__(
+    def __init__(  # noqa: WPS211
         self,
         flume_auth,
         device_id,
