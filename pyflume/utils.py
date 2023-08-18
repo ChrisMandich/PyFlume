@@ -12,7 +12,7 @@ except ImportError:  # Python < 3.9
 
 
 def configure_logger(name):
-    """Custom logger function.
+    """Configure and return a custom logger for the given name.
 
     Args:
         name (string): Name of logger
