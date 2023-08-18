@@ -150,7 +150,7 @@ class TestFlumeNotificationList(unittest.TestCase):
 
 
 class TestFlumeUsageAlerts(unittest.TestCase):
-    """Test Flume Notification List Test."""
+    """Test Flume Usage Alerts Test."""
 
     @requests_mock.Mocker()
     def test_init(self, mock):
@@ -185,6 +185,45 @@ class TestFlumeUsageAlerts(unittest.TestCase):
         assert len(alerts) == 50  # noqa: S101
         assert alerts[0]["device_id"] == "6248148189204194987"
         assert alerts[0]["event_rule_name"] == "High Flow Alert"
+
+
+class TestFlumeLeakList(unittest.TestCase):
+    """Test Flume Leak List Test."""
+
+    @requests_mock.Mocker()
+    def test_init(self, mock):
+        """
+
+        Test initialization for Flume Usage Leak List.
+
+        Args:
+            mock: Requests mock.
+
+        """
+        mock.register_uri(
+            CONST_HTTP_METHOD_POST,
+            pyflume.constants.URL_OAUTH_TOKEN,
+            text=load_fixture(CONST_TOKEN_FILE),
+        )
+        mock.register_uri(
+            "get",
+            pyflume.constants.API_LEAK_URL.format(
+                user_id=CONST_USER_ID, device_id="6248148189204194987"
+            ),
+            text=load_fixture("leak.json"),
+        )
+        flume_auth = pyflume.FlumeAuth(
+            CONST_USERNAME,
+            CONST_PASSWORD,
+            CONST_CLIENT_ID,
+            CONST_CLIENT_SECRET,
+            CONST_FLUME_TOKEN,
+        )
+
+        flume_leaks = pyflume.FlumeLeakList(flume_auth, "6248148189204194987")
+        alerts = flume_leaks.get_leak_alerts()
+        assert len(alerts) == 1  # noqa: S101
+        assert alerts[0]["active"]
 
 
 class TestFlumeData(unittest.TestCase):
