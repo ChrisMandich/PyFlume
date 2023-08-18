@@ -25,6 +25,7 @@ class FlumeLeakList(object):
 
         Args:
             flume_auth: Authentication object.
+            device_id: The Device ID to query.
             http_session: Requests Session()
             timeout: Requests timeout for throttling.
             read: state of notification list, have they been read, not read.
