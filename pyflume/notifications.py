@@ -10,7 +10,7 @@ from .utils import configure_logger, flume_response_error  # noqa: WPS300
 LOGGER = configure_logger(__name__)
 
 
-class FlumeNotificationList:
+class FlumeNotificationList(object):
     """Get Flume Notifications list from API."""
 
     def __init__(
