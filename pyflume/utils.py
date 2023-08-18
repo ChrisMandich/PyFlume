@@ -134,7 +134,7 @@ def flume_response_error(message, response):
     # Raise a custom exception with a formatted message containing the error details
     raise FlumeResponseError(
         "Message:{0}.\nResponse code returned:{1}.\nError message returned:{2}.".format(
-            message, response.status_code, error_message
+            message, response.status_code, error_message,
         ),
     )
 
