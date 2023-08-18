@@ -20,6 +20,15 @@ class FlumeNotificationList(object):
         timeout: int = DEFAULT_TIMEOUT,
         read: str = "false",
     ) -> None:
+        """
+        Initialize the FlumeNotificationList object.
+
+        Args:
+            flume_auth: Authentication object.
+            http_session: Optional Requests Session().
+            timeout: Requests timeout for throttling, default DEFAULT_TIMEOUT.
+            read: state of notification list, default "false".
+        """
         self._timeout = timeout
         self._flume_auth = flume_auth
         self._read = read
