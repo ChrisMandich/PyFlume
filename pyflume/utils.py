@@ -140,6 +140,15 @@ def flume_response_error(message, response):
 
 
 def generate_api_query_payload(scan_interval, device_tz):
+    """Generate API Query payload to support getting data from Flume API.
+
+    Args:
+        scan_interval (_type_): Interval to scan.
+        device_tz (_type_): Time Zone of Flume device.
+
+    Returns:
+        JSON: API Query to retrieve API details.
+    """
     datetime_localtime = datetime.now(timezone.utc).astimezone(ZoneInfo(device_tz))
 
     queries = [
