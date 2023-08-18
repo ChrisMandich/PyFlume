@@ -36,7 +36,11 @@ class FlumeNotificationList(object):
         self.notification_list = self.get_notifications()
 
     def get_notifications(self) -> Dict[str, Any]:
-        """Return all notifications from devices owned by the user."""
+        """Return all notifications from devices owned by the user.
+
+        Returns:
+            Dict[str, Any]: Notification JSON message from API.
+        """
 
         url = API_NOTIFICATIONS_URL.format(user_id=self._flume_auth.user_id)
 
