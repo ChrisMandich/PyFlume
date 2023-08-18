@@ -18,3 +18,4 @@ API_NOTIFICATIONS_URL = f"{API_BASE_URL}/users/{{user_id}}/notifications"
 API_NOTIFICATIONS_LEAK_URL = (
     f"{API_BASE_URL}/users/{{user_id}}/devices/{{device_id}}/leaks/active"
 )
+API_USAGE_URL = f"{API_BASE_URL}/users/{{user_id}}/usage-alerts"

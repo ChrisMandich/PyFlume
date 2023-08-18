@@ -205,8 +205,8 @@ def generate_api_query_payload(scan_interval, device_tz):
             "request_id": "last_30_days",
             "bucket": "DAY",
             "since_datetime": format_time(
-                datetime_localtime - timedelta(days=30)  # noqa: WPS432
-            ),  # noqa: WPS432
+                datetime_localtime - timedelta(days=30),  # noqa: WPS432
+            ),
             "until_datetime": format_time(datetime_localtime),
             "operation": CONST_OPERATION,
             "units": CONST_UNIT_OF_MEASUREMENT,
