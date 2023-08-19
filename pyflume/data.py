@@ -131,7 +131,7 @@ class FlumeData(object):
                 "request_id": "last_60_min",
                 "bucket": "MIN",
                 "since_datetime": format_time(
-                    datetime_localtime - timedelta(minutes=60)
+                    datetime_localtime - timedelta(minutes=60),
                 ),
                 "until_datetime": format_time(datetime_localtime),
                 "operation": CONST_OPERATION,
