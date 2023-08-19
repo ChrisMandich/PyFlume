@@ -1,89 +1,41 @@
-# PyFlume
-Authenticates to Flume API, returns a list of devices and allows you to pull the latest sensor results over a period of time.  
+# Flume API Integration
+## Overview
+The Flume API Integration provides a comprehensive set of classes and methods to interact with various Flume endpoints. This integration allows developers to retrieve and manage notifications, usage alerts, devices, leak alerts, data, and authentication within the Flume environment.
 
-## Configuration
-You can find your Client ID and Client Secret under "API Access" on the [settings page](https://portal.flumewater.com/settings). 
+## Retrieve API Key
+You can find your Client ID and Client Secret under "API Access" on the [settings page](https://portal.flumewater.com/settings). These credentials are essential for interacting with the Flume API.
 
-## Configuration Variables
-```
-username:
-  description: Your flume user id.
-  required: true
-  type: string
-password:
-  description: Your flume password.
-  required: true
-  type: string
-client_id:
-  description: Your flume Client ID.
-  required: true
-  type: string
-client_secret:
-  description: Your flume Client Secret.
-  required: true
-  type: string
-```
+## Modules
+Below are the details of each module, each documented in its corresponding file:
 
-## Examples
+### Notifications
+Retrieve notifications from the Flume API, including filtering based on the read status.
+- [Read the Notifications documentation](docs/notifications.md)
 
-```
-import pyflume
-from datetime import timedelta
-from requests import Session
-import logging
+### Usage Alerts
+Manage and retrieve usage alert notifications from the Flume API.
+- [Read the Usage Alerts documentation](docs/usage.md)
 
-logging.basicConfig(filename="flume.log",level=logging.DEBUG)
+### Devices
+Retrieve information related to Flume devices, including their list from the API.
+- [Read the Devices documentation](docs/devices.md)
 
-KEY_DEVICE_TYPE = "type"
-KEY_DEVICE_ID = "id"
-FLUME_TYPE_SENSOR = 2
+### Leak Alerts
+Manage and retrieve leak notifications from the Flume API.
+- [Read the Leak Alerts documentation](docs/leak.md)
 
-username="<username>"
-password="<password>"
-client_id="<client_id>"
-client_secret="<client_secret>"
+### Data Retrieval
+Retrieve and update data from the Flume API, working with authentication and various data endpoints.
+- [Read the Data Retrieval documentation](docs/data.md)
 
-SCAN_INTERVAL = timedelta(minutes=60)
+### Authentication
+Authentication module to handle tokens and user credentials within the Flume environment.
+- [Read the Authentication documentation](docs/auth.md)
 
-auth = pyflume.FlumeAuth(
-        username, password, client_id, client_secret, http_session=Session()
-        )
+## Getting Started
+To get started with the Flume API Integration, refer to the individual documentation files for each module. They provide detailed information on dependencies, initialization, methods, and example usage.
 
-flume_devices = pyflume.FlumeDeviceList(auth)
-devices = flume_devices.get_devices()
+For any questions or additional support, please refer to the official Flume API documentation or contact the development team.
 
-print("DEVICE LIST")
-print(devices)
-
-print("DEVICE ID")
-for device in flume_devices.device_list:
-    if device[KEY_DEVICE_TYPE] == FLUME_TYPE_SENSOR:
-        print(device[KEY_DEVICE_ID])
-        device_id = device[KEY_DEVICE_ID]
-        device_timezone = device['location']['tz']
-
-flume = pyflume.FlumeData(
-            auth,
-            device_id,
-            device_timezone,
-            SCAN_INTERVAL,
-            http_session=Session(),
-        )
-
-flume_notifications = pyflume.FlumeNotificationList(auth, read="true")
-
-print("NOTIFICATION LIST")
-print(flume_notifications.notification_list)
-
-## Force Update
-flume.update_force()
-
-print("AUTH HEADER")
-print(auth.authorization_header)
-
-print("QUERY PAYLOAD")
-print(pyflume._generate_api_query_payload(SCAN_INTERVAL, device_timezone))
-
-print("FLUME VALUES")
-print(flume.values)
-```
+## Contributing
+Feel free to contribute to the codebase by opening issues, submitting pull requests, or suggesting improvements.
