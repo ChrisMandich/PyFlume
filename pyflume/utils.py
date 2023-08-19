@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import json
 import logging
 
+
 def configure_logger(name):
     """Configure and return a custom logger for the given name.
 
