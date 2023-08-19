@@ -10,27 +10,27 @@ Below are the details of each module, each documented in its corresponding file:
 
 ### Notifications
 Retrieve notifications from the Flume API, including filtering based on the read status.
-- [Read the Notifications documentation](docs/notifications.md)
+- [Read the Notifications documentation](https://github.com/ChrisMandich/PyFlume/blob/master/docs/notifications.md)
 
 ### Usage Alerts
 Manage and retrieve usage alert notifications from the Flume API.
-- [Read the Usage Alerts documentation](docs/usage.md)
+- [Read the Usage Alerts documentation](https://github.com/ChrisMandich/PyFlume/blob/master/docs/usage.md)
 
 ### Devices
 Retrieve information related to Flume devices, including their list from the API.
-- [Read the Devices documentation](docs/devices.md)
+- [Read the Devices documentation](https://github.com/ChrisMandich/PyFlume/blob/master/docs/devices.md)
 
 ### Leak Alerts
 Manage and retrieve leak notifications from the Flume API.
-- [Read the Leak Alerts documentation](docs/leak.md)
+- [Read the Leak Alerts documentation](https://github.com/ChrisMandich/PyFlume/blob/master/docs/leak.md)
 
 ### Data Retrieval
 Retrieve and update data from the Flume API, working with authentication and various data endpoints.
-- [Read the Data Retrieval documentation](docs/data.md)
+- [Read the Data Retrieval documentation](https://github.com/ChrisMandich/PyFlume/blob/master/docs/data.md)
 
 ### Authentication
 Authentication module to handle tokens and user credentials within the Flume environment.
-- [Read the Authentication documentation](docs/auth.md)
+- [Read the Authentication documentation](https://github.com/ChrisMandich/PyFlume/blob/master/docs/auth.md)
 
 ## Getting Started
 To get started with the Flume API Integration, refer to the individual documentation files for each module. They provide detailed information on dependencies, initialization, methods, and example usage.
