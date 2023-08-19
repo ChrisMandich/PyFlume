@@ -1,14 +1,7 @@
 """All functions to support Flume App."""
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import json
 import logging
-
-from .constants import CONST_OPERATION, CONST_UNIT_OF_MEASUREMENT  # noqa: WPS300
-
-try:
-    from zoneinfo import ZoneInfo  # noqa: WPS433
-except ImportError:  # Python < 3.9
-    from backports.zoneinfo import ZoneInfo  # noqa: WPS433,WPS440
 
 
 def configure_logger(name):
@@ -137,79 +130,3 @@ def flume_response_error(message, response):
             message, response.status_code, error_message,
         ),
     )
-
-
-def generate_api_query_payload(scan_interval, device_tz):
-    """Generate API Query payload to support getting data from Flume API.
-
-    Args:
-        scan_interval (_type_): Interval to scan.
-        device_tz (_type_): Time Zone of Flume device.
-
-    Returns:
-        JSON: API Query to retrieve API details.
-    """
-    datetime_localtime = datetime.now(timezone.utc).astimezone(ZoneInfo(device_tz))
-
-    queries = [
-        {
-            "request_id": "current_interval",
-            "bucket": "MIN",
-            "since_datetime": format_time(
-                (datetime_localtime - scan_interval).replace(second=0),
-            ),
-            "until_datetime": format_time(datetime_localtime.replace(second=0)),
-            "operation": CONST_OPERATION,
-            "units": CONST_UNIT_OF_MEASUREMENT,
-        },
-        {
-            "request_id": "today",
-            "bucket": "DAY",
-            "since_datetime": format_start_today(datetime_localtime),
-            "until_datetime": format_time(datetime_localtime),
-            "operation": CONST_OPERATION,
-            "units": CONST_UNIT_OF_MEASUREMENT,
-        },
-        {
-            "request_id": "week_to_date",
-            "bucket": "DAY",
-            "since_datetime": format_start_week(datetime_localtime),
-            "until_datetime": format_time(datetime_localtime),
-            "operation": CONST_OPERATION,
-            "units": CONST_UNIT_OF_MEASUREMENT,
-        },
-        {
-            "request_id": "month_to_date",
-            "bucket": "MON",
-            "since_datetime": format_start_month(datetime_localtime),
-            "until_datetime": format_time(datetime_localtime),
-            "units": CONST_UNIT_OF_MEASUREMENT,
-        },
-        {
-            "request_id": "last_60_min",
-            "bucket": "MIN",
-            "since_datetime": format_time(datetime_localtime - timedelta(minutes=60)),
-            "until_datetime": format_time(datetime_localtime),
-            "operation": CONST_OPERATION,
-            "units": CONST_UNIT_OF_MEASUREMENT,
-        },
-        {
-            "request_id": "last_24_hrs",
-            "bucket": "HR",
-            "since_datetime": format_time(datetime_localtime - timedelta(hours=24)),
-            "until_datetime": format_time(datetime_localtime),
-            "operation": CONST_OPERATION,
-            "units": CONST_UNIT_OF_MEASUREMENT,
-        },
-        {
-            "request_id": "last_30_days",
-            "bucket": "DAY",
-            "since_datetime": format_time(
-                datetime_localtime - timedelta(days=30),  # noqa: WPS432
-            ),
-            "until_datetime": format_time(datetime_localtime),
-            "operation": CONST_OPERATION,
-            "units": CONST_UNIT_OF_MEASUREMENT,
-        },
-    ]
-    return {"queries": queries}
