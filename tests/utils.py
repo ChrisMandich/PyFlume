@@ -1,6 +1,7 @@
 """Utils to support Flume tests."""
 import os
 
+
 def load_fixture(filename):
     """Load a fixture.
 

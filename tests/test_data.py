@@ -10,17 +10,16 @@ import requests_mock
 import pyflume
 
 from .constants import (
-    CONST_TOKEN_FILE,
-    CONST_HTTP_METHOD_POST,
-    CONST_USERNAME,
-    CONST_PASSWORD,
     CONST_CLIENT_ID,
     CONST_CLIENT_SECRET,
-    CONST_USER_ID,
     CONST_FLUME_TOKEN,
-    CONST_SCAN_INTERVAL
+    CONST_HTTP_METHOD_POST,
+    CONST_PASSWORD,
+    CONST_SCAN_INTERVAL,
+    CONST_TOKEN_FILE,
+    CONST_USER_ID,
+    CONST_USERNAME,
 )
-
 from .utils import load_fixture
 
 
@@ -42,7 +41,8 @@ class TestFlumeData(unittest.TestCase):
         mock.register_uri(
             CONST_HTTP_METHOD_POST,
             pyflume.constants.API_QUERY_URL.format(
-                user_id=CONST_USER_ID, device_id="device_id",
+                user_id=CONST_USER_ID,
+                device_id="device_id",
             ),
             text=load_fixture("query.json"),
         )

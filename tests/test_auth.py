@@ -10,16 +10,15 @@ import requests_mock
 import pyflume
 
 from .constants import (
-    CONST_TOKEN_FILE,
-    CONST_HTTP_METHOD_POST,
-    CONST_USERNAME,
-    CONST_PASSWORD,
     CONST_CLIENT_ID,
     CONST_CLIENT_SECRET,
+    CONST_FLUME_TOKEN,
+    CONST_HTTP_METHOD_POST,
+    CONST_PASSWORD,
+    CONST_TOKEN_FILE,
     CONST_USER_ID,
-    CONST_FLUME_TOKEN
+    CONST_USERNAME,
 )
-
 from .utils import load_fixture
 
 

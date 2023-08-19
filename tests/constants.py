@@ -1,6 +1,6 @@
 """Support constants for test_*."""
-from types import MappingProxyType
 from datetime import timedelta
+from types import MappingProxyType
 
 CONST_TOKEN_FILE = "token.json"  # noqa: S105
 CONST_HTTP_METHOD_POST = "post"
