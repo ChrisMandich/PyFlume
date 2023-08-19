@@ -41,9 +41,9 @@ class FlumeLeakList(object):
         else:
             self._http_session = http_session
 
-        self.leak_alert_list = self.get_leak_alerts()
+        self.leak_alert_list = self.get_leaks()
 
-    def get_leak_alerts(self):
+    def get_leaks(self):
         """Return all leak alerts from devices owned by the user.
 
         Returns:
@@ -70,7 +70,7 @@ class FlumeLeakList(object):
             timeout=self._timeout,
         )
 
-        LOGGER.debug(f"get_leak_alerts Response: {response.text}")
+        LOGGER.debug(f"get_leaks Response: {response.text}")
 
         # Check for response errors.
         flume_response_error("Impossible to retrieve leak alerts", response)
