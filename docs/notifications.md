@@ -21,7 +21,8 @@ Method to return all notifications from devices owned by the user. This method f
 
 ## Example
 ```python 
-auth = FlumeAuth(
+import pyflume
+auth = pyflume.FlumeAuth(
     username='your_username',
     password='your_password',
     client_id='client_id',
@@ -29,7 +30,7 @@ auth = FlumeAuth(
 )
 auth.retrieve_token()
 
-notification_list_obj = FlumeNotificationList(
+notification_list_obj = pyflume.FlumeNotificationList(
     flume_auth=auth
 )
 notification_list = notification_list_obj.get_notifications()

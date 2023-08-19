@@ -33,7 +33,9 @@ There are also some internal methods that handle the generation of the API query
 
 ## Example
 ```python
-auth = FlumeAuth(
+import pyflume
+from datetime import timedelta
+auth = pyflume.FlumeAuth(
     username='your_username',
     password='your_password',
     client_id='client_id',
@@ -41,7 +43,7 @@ auth = FlumeAuth(
 )
 auth.retrieve_token()
 
-data = FlumeData(
+data = pyflume.FlumeData(
     flume_auth=auth,
     device_id='your_device_id',
     device_tz='your_timezone',

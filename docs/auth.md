@@ -38,7 +38,8 @@ There are also some internal methods that handle loading and verifying the token
 
 ## Example:
 ```python
-auth = FlumeAuth(
+import pyflume
+auth = pyflume.FlumeAuth(
     username='your_username',
     password='your_password',
     client_id='client_id',

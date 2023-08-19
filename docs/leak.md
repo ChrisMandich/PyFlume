@@ -22,7 +22,8 @@ Method to return all leak alerts from devices owned by the user. This method fet
 
 ## Example
 ```python 
-auth = FlumeAuth(
+import pyflume
+auth = pyflume.FlumeAuth(
     username='your_username',
     password='your_password',
     client_id='client_id',
@@ -30,7 +31,7 @@ auth = FlumeAuth(
 )
 auth.retrieve_token()
 
-leak_list_obj = FlumeLeakList(
+leak_list_obj = pyflume.FlumeLeakList(
     flume_auth=auth,
     device_id='your_device_id'
 )

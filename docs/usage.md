@@ -20,8 +20,9 @@ Usage Alert Retrieval
 Method to return all usage alerts from devices owned by the user. This method fetches a JSON list containing the usage alerts.
 
 ## Example
-```python 
-auth = FlumeAuth(
+```python
+import pyflume
+auth = pyflume.FlumeAuth(
     username='your_username',
     password='your_password',
     client_id='client_id',
@@ -29,7 +30,7 @@ auth = FlumeAuth(
 )
 auth.retrieve_token()
 
-usage_alert_list_obj = FlumeUsageAlertList(
+usage_alert_list_obj = pyflume.FlumeUsageAlertList(
     flume_auth=auth
 )
 usage_alert_list = usage_alert_list_obj.get_usage_alerts()

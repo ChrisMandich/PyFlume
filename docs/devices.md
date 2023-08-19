@@ -20,7 +20,8 @@ Method to return all available devices from the Flume API. This method fetches t
 
 Example
 ```python
-auth = FlumeAuth(
+import pyflume
+auth = pyflume.FlumeAuth(
     username='your_username',
     password='your_password',
     client_id='client_id',
@@ -28,7 +29,7 @@ auth = FlumeAuth(
 )
 auth.retrieve_token()
 
-device_list_obj = FlumeDeviceList(
+device_list_obj = pyflume.FlumeDeviceList(
     flume_auth=auth
 )
 device_list = device_list_obj.get_devices()
