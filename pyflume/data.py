@@ -81,6 +81,55 @@ class FlumeData(object):
         if update_on_init:
             self.update()
 
+    @sleep_and_retry
+    @limits(calls=2, period=API_LIMIT)
+    def update(self):
+        """
+        Return updated value for session.
+
+        Returns:
+            Returns status of update
+
+        """
+        return self.update_force()
+
+    def update_force(self):
+        """Return updated value for session without auto retry or limits."""
+        self.query_payload = self._generate_api_query_payload(
+            self._scan_interval,
+            self.device_tz,
+        )
+
+        url = API_QUERY_URL.format(
+            user_id=self._flume_auth.user_id,
+            device_id=self.device_id,
+        )
+        response = self._http_session.post(
+            url,
+            json=self.query_payload,
+            headers=self._flume_auth.authorization_header,
+            timeout=self._timeout,
+        )
+
+        LOGGER.debug("Update URL: %s", url)  # noqa: WPS323
+        LOGGER.debug("Update query_payload: %s", self.query_payload)  # noqa: WPS323
+        LOGGER.debug("Update Response: %s", response.text)  # noqa: WPS323
+
+        # Check for response errors.
+        flume_response_error(
+            "Can't update flume data for user id {0}".format(self._flume_auth.user_id),
+            response,
+        )
+
+        responses = response.json()["data"][0]
+
+        self.values = {  # noqa: WPS110
+            k: responses[k][0]["value"]
+            if len(responses[k]) == 1
+            else None  # noqa: WPS221,WPS111
+            for k in self._query_keys  # noqa: WPS111
+        }
+
     def _generate_api_query_payload(self, scan_interval, device_tz):
         """Generate API Query payload to support getting data from Flume API.
 
@@ -157,52 +206,3 @@ class FlumeData(object):
             },
         ]
         return {"queries": queries}
-
-    @sleep_and_retry
-    @limits(calls=2, period=API_LIMIT)
-    def update(self):
-        """
-        Return updated value for session.
-
-        Returns:
-            Returns status of update
-
-        """
-        return self.update_force()
-
-    def update_force(self):
-        """Return updated value for session without auto retry or limits."""
-        self.query_payload = self._generate_api_query_payload(
-            self._scan_interval,
-            self.device_tz,
-        )
-
-        url = API_QUERY_URL.format(
-            user_id=self._flume_auth.user_id,
-            device_id=self.device_id,
-        )
-        response = self._http_session.post(
-            url,
-            json=self.query_payload,
-            headers=self._flume_auth.authorization_header,
-            timeout=self._timeout,
-        )
-
-        LOGGER.debug("Update URL: %s", url)  # noqa: WPS323
-        LOGGER.debug("Update query_payload: %s", self.query_payload)  # noqa: WPS323
-        LOGGER.debug("Update Response: %s", response.text)  # noqa: WPS323
-
-        # Check for response errors.
-        flume_response_error(
-            "Can't update flume data for user id {0}".format(self._flume_auth.user_id),
-            response,
-        )
-
-        responses = response.json()["data"][0]
-
-        self.values = {  # noqa: WPS110
-            k: responses[k][0]["value"]
-            if len(responses[k]) == 1
-            else None  # noqa: WPS221,WPS111
-            for k in self._query_keys  # noqa: WPS111
-        }
