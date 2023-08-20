@@ -61,7 +61,7 @@ class TestFlumeUsageAlerts(unittest.TestCase):
 
         mock.register_uri(
             "get",
-            flume_alerts._next_page,
+            flume_alerts.next_page,
             text=load_fixture("usage_next.json"),
         )
 

@@ -60,7 +60,7 @@ class TestFlumeNotificationList(unittest.TestCase):
 
         mock.register_uri(
             "get",
-            flume_notifications._next_page,
+            flume_notifications.next_page,
             text=load_fixture("notification_next.json"),
         )
 

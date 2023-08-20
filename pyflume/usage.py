@@ -32,7 +32,6 @@ class FlumeUsageAlertList(object):
         self._timeout = timeout
         self._flume_auth = flume_auth
         self._read = read
-        self._next_page = None
 
         if http_session is None:
             self._http_session = Session()
@@ -40,6 +39,7 @@ class FlumeUsageAlertList(object):
             self._http_session = http_session
 
         self.has_next = None
+        self.next_page = None
         self.usage_alert_list = self.get_usage_alerts()
 
     def get_usage_alerts(self):
@@ -68,7 +68,7 @@ class FlumeUsageAlertList(object):
             ValueError: If no next page is available.
         """
         if self.has_next:
-            api_url = f"{API_BASE_URL}{self._next_page}"
+            api_url = f"{API_BASE_URL}{self.next_page}"
             query_string = {}
         else:
             raise ValueError("No next page available.")
@@ -117,13 +117,13 @@ class FlumeUsageAlertList(object):
 
         response_json = response.json()
         if self._has_next_page(response_json):
-            self._next_page = response_json["pagination"]["next"]
+            self.next_page = response_json["pagination"]["next"]
             self.has_next = True
             LOGGER.debug(
-                f"Next page for Usage results: {self._next_page}",
+                f"Next page for Usage results: {self.next_page}",
             )
         else:
             self.has_next = False
-            self._next_page = None
+            self.next_page = None
             LOGGER.debug("No further pages for Usage results.")
         return response_json["data"]

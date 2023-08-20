@@ -37,8 +37,8 @@ class FlumeNotificationList(object):
         self._flume_auth = flume_auth
         self._read = read
         self._http_session = http_session or Session()
-        self._next_page = None
         self.has_next = False
+        self.next_page = None
         self.notification_list = self.get_notifications()
 
     def get_notifications(self) -> Dict[str, Any]:
@@ -69,7 +69,7 @@ class FlumeNotificationList(object):
             ValueError: If no next page is available.
         """
         if self.has_next:
-            api_url = f"{API_BASE_URL}{self._next_page}"
+            api_url = f"{API_BASE_URL}{self.next_page}"
             query_string = {}
         else:
             raise ValueError("No next page available.")
@@ -118,13 +118,13 @@ class FlumeNotificationList(object):
 
         response_json = response.json()
         if self._has_next_page(response_json):
-            self._next_page = response_json["pagination"]["next"]
+            self.next_page = response_json["pagination"]["next"]
             self.has_next = True
             LOGGER.debug(
-                f"Next page for Notification results: {self._next_page}",
+                f"Next page for Notification results: {self.next_page}",
             )
         else:
             self.has_next = False
-            self._next_page = None
+            self.next_page = None
             LOGGER.debug("No further pages for Notification results.")
         return response_json["data"]
