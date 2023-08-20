@@ -69,7 +69,7 @@ class TestFlumeUsageAlerts(unittest.TestCase):
         assert len(alerts_next) == 50  # noqa: S101
         assert alerts_next[0]["device_id"] == "6248148189204194987"  # noqa: S101
         assert alerts_next[0]["event_rule_name"] == "High Flow Alert"  # noqa: S101
-        assert flume_alerts.has_next == False  # noqa: S101
+        assert flume_alerts.has_next is False  # noqa: S101
 
         mock.register_uri(
             "get",
@@ -81,4 +81,4 @@ class TestFlumeUsageAlerts(unittest.TestCase):
         assert len(alerts_nopage) == 50  # noqa: S101
         assert alerts_nopage[0]["device_id"] == "6248148189204194987"  # noqa: S101
         assert alerts_nopage[0]["event_rule_name"] == "High Flow Alert"  # noqa: S101
-        assert flume_alerts.has_next == False  # noqa: S101
+        assert flume_alerts.has_next is False  # noqa: S101
