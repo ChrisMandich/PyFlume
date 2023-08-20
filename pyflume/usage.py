@@ -72,7 +72,7 @@ class FlumeUsageAlertList(object):
         return self._get_usage_request(api_url, query_string)
 
     def _has_next_page(self, response_json):
-        """Returns true if next page exists.
+        """Return True if the next page exists.
 
         Args:
             response_json (Object): Response from API.
@@ -87,7 +87,7 @@ class FlumeUsageAlertList(object):
         )
 
     def _get_usage_request(self, api_url, query_string):
-        """API request to get usage alerts from Flume API.
+        """Make an API request to get usage alerts from the Flume API.
 
         Args:
             api_url (string): URL for request
