@@ -78,7 +78,7 @@ class TestFlumeUsageAlerts(unittest.TestCase):
         )
 
         alerts_nopage = flume_alerts.get_usage_alerts()
-        assert len(alerts_nopage) == 50  # noqa: S101
+        assert len(alerts_nopage) == 50  # noqa: S101, WPS432
         assert alerts_nopage[0]["device_id"] == "6248148189204194987"  # noqa: S101
         assert alerts_nopage[0]["event_rule_name"] == "High Flow Alert"  # noqa: S101
         assert flume_alerts.has_next is False  # noqa: S101
