@@ -70,8 +70,32 @@ class FlumeUsageAlertList(object):
         else:
             raise ValueError("No next page available.")
         return self._get_usage_request(api_url, query_string)
+    
+    def _has_next_page(self, response_json):
+        """Returns true if next page exists.
+
+        Args:
+            response_json (Object): Response from API.
+
+        Returns:
+            Boolean: Returns true if next page exists, False if not.
+        """
+        return (
+            "pagination" in response_json
+            and "next" in response_json["pagination"]
+            and response_json["pagination"]["next"] is not None
+        )
 
     def _get_usage_request(self, api_url, query_string):
+        """API request to get usage alerts from Flume API.
+
+        Args:
+            api_url (string): URL for request
+            query_string (object): query string options
+
+        Returns:
+            object: Reponse in JSON format from API.
+        """
 
         response = self._http_session.request(
             "GET",
@@ -87,11 +111,7 @@ class FlumeUsageAlertList(object):
         flume_response_error("Impossible to retrieve usage alert", response)
 
         response_json = response.json()
-        if (
-            "pagination" in response_json
-            and "next" in response_json["pagination"]
-            and response_json["pagination"]["next"] is not None
-        ):
+        if self._has_next_page(response_json):
             self._next_page = response_json["pagination"]["next"]
             self.has_next = True
             LOGGER.debug(
