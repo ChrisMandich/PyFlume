@@ -33,5 +33,8 @@
     }
   ],
   "count": 1,
-  "pagination": null
+  "pagination":{
+    "next":"/users/1111/notifications?offset=1&limit=1",
+    "prev":null
+  }
 }

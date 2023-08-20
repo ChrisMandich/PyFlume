@@ -1,7 +1,7 @@
 """Retrieve usage alert notifications from Flume API."""
 from requests import Session
 
-from .constants import API_USAGE_URL, DEFAULT_TIMEOUT  # noqa: WPS300
+from .constants import API_BASE_URL, API_USAGE_URL, DEFAULT_TIMEOUT  # noqa: WPS300
 from .utils import configure_logger, flume_response_error  # noqa: WPS300
 
 # Configure logging
@@ -32,40 +32,73 @@ class FlumeUsageAlertList(object):
         self._timeout = timeout
         self._flume_auth = flume_auth
         self._read = read
+        self._next_page = None
 
         if http_session is None:
             self._http_session = Session()
         else:
             self._http_session = http_session
 
+        self.has_next = None
         self.usage_alert_list = self.get_usage_alerts()
 
     def get_usage_alerts(self):
-        """Return all usage alerts from devices owned by teh user.
+        """Return initial page of usage alerts from devices owned by the user.
 
         Returns:
             Returns JSON list of usage alerts.
         """
 
-        url = API_USAGE_URL.format(user_id=self._flume_auth.user_id)
-
+        api_url = API_USAGE_URL.format(user_id=self._flume_auth.user_id)
         query_string = {
             "limit": "50",
             "offset": "0",
             "sort_direction": "ASC",
             "read": self._read,
         }
+        return self._get_usage_request(api_url, query_string)
+
+    def get_next_usage_alerts(self):
+        """Return next page of usage alerts from devices owned by the user.
+
+        Returns:
+            Returns JSON list of usage alerts.
+        """
+        if self.has_next:
+            api_url = f"{API_BASE_URL}{self._next_page}"
+            query_string = {}
+        else:
+            raise ValueError("No next page available.")
+        return self._get_usage_request(api_url, query_string)
+
+    def _get_usage_request(self, api_url, query_string):
 
         response = self._http_session.request(
             "GET",
-            url,
+            api_url,
             headers=self._flume_auth.authorization_header,
             params=query_string,
             timeout=self._timeout,
         )
 
-        LOGGER.debug(f"get_usage_alerts Response: {response.text}")
+        LOGGER.debug(f"_get_usage_request Response: {response.text}")
 
         # Check for response errors.
         flume_response_error("Impossible to retrieve usage alert", response)
-        return response.json()["data"]
+
+        response_json = response.json()
+        if (
+            "pagination" in response_json
+            and "next" in response_json["pagination"]
+            and response_json["pagination"]["next"] is not None
+        ):
+            self._next_page = response_json["pagination"]["next"]
+            self.has_next = True
+            LOGGER.debug(
+                f"Next page for Usage results: {response_json['pagination']['next']}"
+            )
+        else:
+            self.has_next = False
+            self._next_page = None
+            LOGGER.debug("No further pages for Usage results.")
+        return response_json["data"]
