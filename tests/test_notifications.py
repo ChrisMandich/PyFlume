@@ -67,7 +67,7 @@ class TestFlumeNotificationList(unittest.TestCase):
         notifications_next = flume_notifications.get_next_notifications()
         assert len(notifications_next) == 1  # noqa: S101
         assert notifications_next[0][CONST_USER_ID] == 1111  # noqa: S101,WPS432
-        assert flume_notifications.has_next == False  # noqa: S101
+        assert flume_notifications.has_next is False  # noqa: S101
 
         mock.register_uri(
             "get",
@@ -78,4 +78,4 @@ class TestFlumeNotificationList(unittest.TestCase):
         notifications_nopage = flume_notifications.get_notifications()
         assert len(notifications_nopage) == 1  # noqa: S101
         assert notifications_nopage[0][CONST_USER_ID] == 1111  # noqa: S101,WPS432
-        assert flume_notifications.has_next == False  # noqa: S101
+        assert flume_notifications.has_next is False  # noqa: S101
