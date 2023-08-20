@@ -57,7 +57,7 @@ class TestFlumeUsageAlerts(unittest.TestCase):
         assert len(alerts) == 50  # noqa: S101, WPS432
         assert alerts[0]["device_id"] == "6248148189204194987"  # noqa: S101
         assert alerts[0]["event_rule_name"] == "High Flow Alert"  # noqa: S101
-        assert flume_alerts.has_next == True  # noqa: S101
+        assert flume_alerts.has_next  # noqa: S101
 
         mock.register_uri(
             "get",

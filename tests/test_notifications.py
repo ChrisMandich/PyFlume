@@ -56,7 +56,7 @@ class TestFlumeNotificationList(unittest.TestCase):
         notifications = flume_notifications.get_notifications()
         assert len(notifications) == 1  # noqa: S101
         assert notifications[0][CONST_USER_ID] == 1111  # noqa: S101,WPS432
-        assert flume_notifications.has_next == True  # noqa: S101
+        assert flume_notifications.has_next  # noqa: S101
 
         mock.register_uri(
             "get",
