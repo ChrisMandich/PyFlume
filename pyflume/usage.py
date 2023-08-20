@@ -63,6 +63,9 @@ class FlumeUsageAlertList(object):
 
         Returns:
             Returns JSON list of usage alerts.
+
+        Raises:
+            ValueError: If no next page is available.
         """
         if self.has_next:
             api_url = f"{API_BASE_URL}{self._next_page}"
