@@ -3,7 +3,11 @@ from typing import Any, Dict, Optional
 
 from requests import Session
 
-from .constants import API_BASE_URL, API_NOTIFICATIONS_URL, DEFAULT_TIMEOUT  # noqa: WPS300
+from .constants import (  # noqa: WPS300
+    API_BASE_URL,
+    API_NOTIFICATIONS_URL,
+    DEFAULT_TIMEOUT,
+)
 from .utils import configure_logger, flume_response_error  # noqa: WPS300
 
 # Configure logging
