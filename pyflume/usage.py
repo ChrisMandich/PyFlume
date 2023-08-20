@@ -115,7 +115,7 @@ class FlumeUsageAlertList(object):
             self._next_page = response_json["pagination"]["next"]
             self.has_next = True
             LOGGER.debug(
-                f"Next page for Usage results: {self._next_page}"
+                f"Next page for Usage results: {self._next_page}",
             )
         else:
             self.has_next = False
