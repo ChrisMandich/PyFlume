@@ -25,7 +25,7 @@ class TestFlumeUsageAlerts(unittest.TestCase):
     """Test Flume Usage Alerts Test."""
 
     @requests_mock.Mocker()
-    def test_init(self, mock):
+    def test_usage(self, mock):
         """
 
         Test initialization for Flume Usage Alerts List.
@@ -57,3 +57,28 @@ class TestFlumeUsageAlerts(unittest.TestCase):
         assert len(alerts) == 50  # noqa: S101, WPS432
         assert alerts[0]["device_id"] == "6248148189204194987"  # noqa: S101
         assert alerts[0]["event_rule_name"] == "High Flow Alert"  # noqa: S101
+        assert flume_alerts.has_next == True  # noqa: S101
+
+        mock.register_uri(
+            "get",
+            flume_alerts._next_page,
+            text=load_fixture("usage_next.json"),
+        )
+
+        alerts_next = flume_alerts.get_next_usage_alerts()
+        assert len(alerts_next) == 50  # noqa: S101
+        assert alerts_next[0]["device_id"] == "6248148189204194987"  # noqa: S101
+        assert alerts_next[0]["event_rule_name"] == "High Flow Alert"  # noqa: S101
+        assert flume_alerts.has_next == False  # noqa: S101
+
+        mock.register_uri(
+            "get",
+            pyflume.constants.API_USAGE_URL.format(user_id=CONST_USER_ID),
+            text=load_fixture("usage_nopage.json"),
+        )
+
+        alerts_nopage = flume_alerts.get_usage_alerts()
+        assert len(alerts_nopage) == 50  # noqa: S101
+        assert alerts_nopage[0]["device_id"] == "6248148189204194987"  # noqa: S101
+        assert alerts_nopage[0]["event_rule_name"] == "High Flow Alert"  # noqa: S101
+        assert flume_alerts.has_next == False  # noqa: S101

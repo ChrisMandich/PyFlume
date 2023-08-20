@@ -25,7 +25,7 @@ class TestFlumeNotificationList(unittest.TestCase):
     """Test Flume Notification List Test."""
 
     @requests_mock.Mocker()
-    def test_init(self, mock):
+    def test_notification(self, mock):
         """
 
         Test initialization for Flume Notification List.
@@ -56,3 +56,26 @@ class TestFlumeNotificationList(unittest.TestCase):
         notifications = flume_notifications.get_notifications()
         assert len(notifications) == 1  # noqa: S101
         assert notifications[0][CONST_USER_ID] == 1111  # noqa: S101,WPS432
+        assert flume_notifications.has_next == True  # noqa: S101
+
+        mock.register_uri(
+            "get",
+            flume_notifications._next_page,
+            text=load_fixture("notification_next.json"),
+        )
+
+        notifications_next = flume_notifications.get_next_notifications()
+        assert len(notifications_next) == 1  # noqa: S101
+        assert notifications_next[0][CONST_USER_ID] == 1111  # noqa: S101,WPS432
+        assert flume_notifications.has_next == False  # noqa: S101
+
+        mock.register_uri(
+            "get",
+            pyflume.constants.API_NOTIFICATIONS_URL.format(user_id=CONST_USER_ID),
+            text=load_fixture("notification_nopage.json"),
+        )
+
+        notifications_nopage = flume_notifications.get_notifications()
+        assert len(notifications_nopage) == 1  # noqa: S101
+        assert notifications_nopage[0][CONST_USER_ID] == 1111  # noqa: S101,WPS432
+        assert flume_notifications.has_next == False  # noqa: S101
