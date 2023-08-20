@@ -70,7 +70,7 @@ class FlumeUsageAlertList(object):
         else:
             raise ValueError("No next page available.")
         return self._get_usage_request(api_url, query_string)
-    
+
     def _has_next_page(self, response_json):
         """Returns true if next page exists.
 
