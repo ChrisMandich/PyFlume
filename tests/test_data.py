@@ -27,7 +27,7 @@ class TestFlumeData(unittest.TestCase):
     """Test Flume Data Test."""
 
     @requests_mock.Mocker()
-    def test_init(self, mock):
+    def test_data(self, mock):
         """Test initialization for Flume Data.
 
         Args:

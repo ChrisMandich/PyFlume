@@ -26,7 +26,7 @@ class TestFlumeAuth(unittest.TestCase):
     """Flume Auth Test Case."""
 
     @requests_mock.Mocker()
-    def test_init(self, mock):
+    def test_auth(self, mock):
         """
 
         Test initialization for Flume Auth.

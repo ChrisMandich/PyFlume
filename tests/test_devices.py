@@ -25,7 +25,7 @@ class TestFlumeDeviceList(unittest.TestCase):
     """Flume Device List Test Case."""
 
     @requests_mock.Mocker()
-    def test_init(self, mock):
+    def test_devices(self, mock):
         """Test initialization for Flume Device List.
 
         Args:

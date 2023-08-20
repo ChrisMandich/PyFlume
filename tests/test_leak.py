@@ -25,7 +25,7 @@ class TestFlumeLeakList(unittest.TestCase):
     """Test Flume Leak List Test."""
 
     @requests_mock.Mocker()
-    def test_init(self, mock):
+    def test_leak(self, mock):
         """
 
         Test initialization for Flume Usage Leak List.

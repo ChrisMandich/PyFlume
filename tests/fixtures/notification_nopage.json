@@ -1,0 +1,37 @@
+{
+  "success": true,
+  "code": 602,
+  "message": "Request OK",
+  "http_code": 200,
+  "http_message": "OK",
+  "detailed": null,
+  "data": [
+    {
+      "id": 111111,
+      "device_id": "6248148189204194987",
+      "user_id": 1111,
+      "type": 1,
+      "message": "Low Flow Leak triggered at Home. Water has been running for 2 hours averaging 0.43 gallons every minute.",
+      "created_datetime": "2020-01-15T16:33:39.000Z",
+      "title": "Potential Leak Detected!",
+      "read": true,
+      "extra": {
+        "query": {
+          "request_id": "SYSTEM_TRIGGERED_USAGE_ALERT",
+          "since_datetime": "2020-01-15 06:33:59",
+          "until_datetime": "2020-01-15 08:33:59",
+          "tz": "America/Los_Angeles",
+          "bucket": "MIN",
+          "raw": false,
+          "group_multiplier": 2,
+          "device_id": [
+            "6248148189204194987"
+          ]
+        }
+      },
+      "event_rule": "Low Flow Leak"
+    }
+  ],
+  "count": 1,
+  "pagination": null
+}
