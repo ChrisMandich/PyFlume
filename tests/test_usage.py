@@ -66,7 +66,7 @@ class TestFlumeUsageAlerts(unittest.TestCase):
         )
 
         alerts_next = flume_alerts.get_next_usage_alerts()
-        assert len(alerts_next) == 50  # noqa: S101
+        assert len(alerts_next) == 50  # noqa: S101, WPS432
         assert alerts_next[0]["device_id"] == "6248148189204194987"  # noqa: S101
         assert alerts_next[0]["event_rule_name"] == "High Flow Alert"  # noqa: S101
         assert flume_alerts.has_next is False  # noqa: S101
