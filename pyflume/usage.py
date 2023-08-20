@@ -83,9 +83,11 @@ class FlumeUsageAlertList(object):
         Returns:
             Boolean: Returns true if next page exists, False if not.
         """
+        if response_json is None or response_json.get("pagination") is None:
+            return False
+
         return (
-            "pagination" in response_json
-            and "next" in response_json["pagination"]
+            "next" in response_json["pagination"]
             and response_json["pagination"]["next"] is not None
         )
 

@@ -19,6 +19,18 @@ Notification Retrieval
 `get_notifications()`
 Method to return all notifications from devices owned by the user. This method fetches a JSON dictionary containing the notification messages.
 
+`get_next_notifications()`
+Method to return the next page of notifications from devices owned by the user. Raises a ValueError if no next page is available.
+
+Raises:
+ - `ValueError`: If no next page is available.
+
+`_has_next_page(response_json)`
+Returns True if the next page exists. Used internally to handle pagination.
+
+`_get_notification_request(api_url, query_string)`
+Make an API request to get usage alerts from the Flume API.
+
 ## Example
 ```python 
 import pyflume
@@ -35,4 +47,11 @@ notification_list_obj = pyflume.FlumeNotificationList(
 )
 notification_list = notification_list_obj.get_notifications()
 print(notification_list)  # Prints the JSON dictionary of notifications
+```
+
+For subsequent pages:
+```python
+if notification_list_obj.has_next:
+    next_page_notifications = notification_list_obj.get_next_notifications()
+    print(next_page_notifications)  # Prints the JSON list of notifications for the next page
 ```
