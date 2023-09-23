@@ -23,6 +23,7 @@ class FlumeNotificationList(object):
         http_session: Optional[Session] = None,
         timeout: int = DEFAULT_TIMEOUT,
         read: str = "false",
+        sort_direction: str = "ASC",
     ) -> None:
         """
         Initialize the FlumeNotificationList object.
@@ -32,10 +33,12 @@ class FlumeNotificationList(object):
             http_session: Optional Requests Session().
             timeout: Requests timeout for throttling, default DEFAULT_TIMEOUT.
             read: state of notification list, default "false".
+            sort_direction: Which direction to sort notifications on, default "ASC".
         """
         self._timeout = timeout
         self._flume_auth = flume_auth
         self._read = read
+        self._sort_direction = sort_direction
         self._http_session = http_session or Session()
         self.has_next = False
         self.next_page = None
@@ -53,7 +56,7 @@ class FlumeNotificationList(object):
         query_string = {
             "limit": "50",
             "offset": "0",
-            "sort_direction": "ASC",
+            "sort_direction": self._sort_direction,
             "read": self._read,
         }
 
