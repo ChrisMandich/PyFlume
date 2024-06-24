@@ -1,4 +1,5 @@
 """Retrieve data from Flume API."""
+
 from datetime import datetime, timedelta, timezone
 
 from ratelimit import limits, sleep_and_retry
@@ -124,9 +125,9 @@ class FlumeData(object):
         responses = response.json()["data"][0]
 
         self.values = {  # noqa: WPS110
-            k: responses[k][0]["value"]
-            if len(responses[k]) == 1
-            else None  # noqa: WPS221,WPS111
+            k: (
+                responses[k][0]["value"] if len(responses[k]) == 1 else None
+            )  # noqa: WPS221,WPS111
             for k in self._query_keys  # noqa: WPS111
         }
 

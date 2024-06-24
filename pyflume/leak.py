@@ -1,4 +1,5 @@
 """Retrieve leak notifications from Flume API."""
+
 from requests import Session
 
 from .constants import API_LEAK_URL, DEFAULT_TIMEOUT  # noqa: WPS300

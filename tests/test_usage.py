@@ -1,4 +1,5 @@
 """Basic tests for flume usage alerts. This module contains unittest classes for testing different functionalities of flume."""
+
 # Standard library imports
 import unittest
 

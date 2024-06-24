@@ -1,4 +1,5 @@
 """Authenticates to Flume API."""
+
 from datetime import datetime, timedelta
 import json
 

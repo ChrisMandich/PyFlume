@@ -1,4 +1,5 @@
 """Retrieve notifications from Flume API."""
+
 from typing import Any, Dict, Optional
 
 from requests import Session
@@ -17,8 +18,8 @@ LOGGER = configure_logger(__name__)
 class FlumeNotificationList(object):
     """Get Flume Notifications list from API."""
 
-    def __init__(
-        self,  # noqa: WPS211
+    def __init__(  # noqa: WPS211
+        self,
         flume_auth,
         http_session: Optional[Session] = None,
         timeout: int = DEFAULT_TIMEOUT,

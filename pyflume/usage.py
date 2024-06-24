@@ -1,4 +1,5 @@
 """Retrieve usage alert notifications from Flume API."""
+
 from requests import Session
 
 from .constants import API_BASE_URL, API_USAGE_URL, DEFAULT_TIMEOUT  # noqa: WPS300

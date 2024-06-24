@@ -1,4 +1,5 @@
 """Support constants for test_*."""
+
 from datetime import timedelta
 from types import MappingProxyType
 
