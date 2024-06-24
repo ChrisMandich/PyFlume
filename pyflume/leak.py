@@ -9,7 +9,7 @@ from .utils import configure_logger, flume_response_error  # noqa: WPS300
 LOGGER = configure_logger(__name__)
 
 
-class FlumeLeakList(object):
+class FlumeLeakList:
     """Get Flume Flume Leak Notifications from API."""
 
     def __init__(  # noqa: WPS211

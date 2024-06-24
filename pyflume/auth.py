@@ -13,7 +13,7 @@ from .utils import configure_logger, flume_response_error  # noqa: WPS300
 LOGGER = configure_logger(__name__)
 
 
-class FlumeAuth(object):  # noqa: WPS214
+class FlumeAuth:  # noqa: WPS214
     """Interact with API Authentication."""
 
     def __init__(  # noqa: WPS211

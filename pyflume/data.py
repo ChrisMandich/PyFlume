@@ -30,7 +30,7 @@ except ImportError:  # Python < 3.9
 LOGGER = configure_logger(__name__)
 
 
-class FlumeData(object):
+class FlumeData:
     """Get the latest data and update the states."""
 
     def __init__(  # noqa: WPS211
@@ -124,12 +124,21 @@ class FlumeData(object):
 
         responses = response.json()["data"][0]
 
-        self.values = {  # noqa: WPS110
-            k: (
-                responses[k][0]["value"] if len(responses[k]) == 1 else None
-            )  # noqa: WPS221,WPS111
-            for k in self._query_keys  # noqa: WPS111
-        }
+        # Step 1: Initialize an empty dictionary
+        values_dict = {}
+
+        # Step 2: Loop through each key in self._query_keys
+        for key in self._query_keys:
+            # Step 3: Check the length of the responses for the current key
+            if len(responses[key]) == 1:
+                # Step 4: Assign the value to the dictionary if the condition is met
+                values_dict[key] = responses[key][0]["value"]
+            else:
+                # Step 5: Assign None to the dictionary if the condition is not met
+                values_dict[key] = None
+
+        # Step 6: Assign the result to self.values
+        self.values = values_dict  # noqa: WPS110
 
     def _generate_api_query_payload(self, scan_interval, device_tz):
         """Generate API Query payload to support getting data from Flume API.
