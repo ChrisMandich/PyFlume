@@ -1,3 +1,4 @@
+# noqa: WPS211
 """Retrieve notifications from Flume API."""
 from typing import Any, Dict, Optional
 
