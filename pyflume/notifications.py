@@ -1,4 +1,3 @@
-# noqa: WPS211
 """Retrieve notifications from Flume API."""
 from typing import Any, Dict, Optional
 
@@ -19,7 +18,7 @@ class FlumeNotificationList(object):
     """Get Flume Notifications list from API."""
 
     def __init__(
-        self,
+        self,  # noqa: WPS211
         flume_auth,
         http_session: Optional[Session] = None,
         timeout: int = DEFAULT_TIMEOUT,
